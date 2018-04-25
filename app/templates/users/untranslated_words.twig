@@ -1,0 +1,31 @@
+{% extends 'menu.twig' %}
+{% block content %}
+<div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Untranslated words</div>
+        <div class="card-body">
+          <div>
+            <div class="row"><div class="col col-lg-8"><table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+              <thead>
+                <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 76px;">Spanish</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 116px;">Maya</th></tr>
+              </thead>
+              <tbody>  
+              <tr role="row" class="odd">
+                  <td class="sorting_1"><input class="form-control" type="text" placeholder="Enter the translation"></td>
+                  <td>Systems Administrator</td>
+                </tr><tr role="row" class="even">
+                  <td class="sorting_1"><input class="form-control" type="text" placeholder="Enter the translation"></td>
+                  <td>Senior Marketing Designer</td>
+                </tr><tr role="row" class="odd">
+                  <td class="sorting_1"><input class="form-control" type="text" placeholder="Enter the translation"></td>
+                  <td>Regional Director</td>
+                </tr>
+				</tbody>
+            </table></div></div></div>
+			<a class="btn btn-primary btn-sm" type="submit" href="/#">Add the new translation(s)</a>
+			</div>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+      </div>
+{% endblock %}

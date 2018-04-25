@@ -1,0 +1,20 @@
+{% extends 'menu.twig' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+<div class="card card-login mx-auto mt-5">
+      <div class="card-header">Add a new user</div>
+      <div class="card-body">
+         <form method="POST" action="./add_user">
+		{{ form.hidden_tag() }}
+          <div class="form-group">
+          {{ wtf.form_field(form.email) }}
+          </div>
+		  <div class="custom-control custom-radio">
+			  {{ wtf.form_field(form.isAdmin) }}
+		  </div>
+		  <br>
+          <input class="btn btn-primary btn-block" type="submit" value='Send a password to the user' />
+        </form>
+      </div>
+</div>
+{% endblock %}

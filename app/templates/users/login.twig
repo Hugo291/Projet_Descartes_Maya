@@ -1,0 +1,30 @@
+{% extends 'head.twig' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block menu_login %}
+<body class="bg-dark">
+  <div class="container">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Login</div>
+      <div class="card-body">
+        <form method="POST" action="/login">
+          <div class="form-group">
+			{{ form.hidden_tag() }}
+		  </div>
+		  <div class="form-group">
+			{{ wtf.form_field(form.email) }}
+		  </div>
+		  <div class="form-group">
+			{{ wtf.form_field(form.password) }}
+		  </div>
+		  <div class="form-group">
+            {{ wtf.form_field(form.remember) }}
+          </div>
+			<input type="submit" value="Login"/>
+		  </form>
+        <div class="text-center">
+          <a class="d-block small" href="/forgot_password">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

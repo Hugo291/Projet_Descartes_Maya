@@ -1,0 +1,36 @@
+{% extends 'menu.twig' %}
+{% block content %}
+<div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Import and scan a PDF</div>
+        <div class="card-body">
+          <div>
+            <div class="row"><div class="col col-lg-8"><table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+              <thead>
+                <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 76px;">Preview</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 116px;">Scan by OCR (You can edit)</th></tr>
+              </thead>
+              <tbody>  
+              <tr role="row" class="odd">
+                  <td class="sorting_1">
+					<div class="form-group">
+						<div class="form-group">
+							<img class="" id="preview" src="static/images/preview_PDF.png" /></textarea>
+						</div>
+					</div>
+					</td>
+                  <td>
+					<div class="form-group">
+						<div class="form-group">
+							<textarea class="form-control" id="scanned" rows="12"></textarea>
+						</div>
+					</div>
+				  </td>
+                </tr></tbody>
+            </table>
+			<a class="btn btn-primary btn-sm" type="submit" href="/#">Save new words</a>
+			</div></div></div></div>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+      </div>
+{% endblock %}
