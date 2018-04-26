@@ -30,7 +30,7 @@ class AccountForm(ModelView):
 
 class AccountSettings(ModelView):
     list_template = 'admin/list.html'
-    edit_template = 'edit_user.twig'
+    edit_template = 'edit_user.html'
     column_exclude_list = ['pswd']
     form_columns = ['email', 'isAdmin']
 

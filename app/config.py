@@ -2,8 +2,10 @@ import os
 
 DEBUG = True
 
+SECRET_KEY = 'mysecret'
+
 # SQLAlchemy settings
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/descartes_mexique'
+SQLALCHEMY_DATABASE_URI = 'mysql://descartes_gama:lpinfo@mysql-descartes.alwaysdata.net/descartes_mexique'
 SQLALCHEMY_TRACK_MODIFICATIONS = False  # Avoids a SQLAlchemy Warning
 
 #Static
