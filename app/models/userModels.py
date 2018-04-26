@@ -11,9 +11,7 @@ from wtforms import StringField, PasswordField, BooleanField
 # Pour obliger de remplir les champs ayant une certaine taille de value
 from wtforms.validators import InputRequired, Email, Length, Optional
 
-from app import admin
-from app import db
-
+from app import admin , db
 
 class Account(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

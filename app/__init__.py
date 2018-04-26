@@ -22,6 +22,7 @@ login.init_app(application)
 mail = Mail(application)
 
 from app.models.userModels import Account
+import app.models.DataBase
 
 
 @application.route('/')

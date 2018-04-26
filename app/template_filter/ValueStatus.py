@@ -8,7 +8,7 @@ print("Load template filter")
 def value_status_file(status_number):
     return {
         0: 'Waiting',
-        1: 'In progress ( ' + str(threadScan.get_percent) + ' % )',
+        1: 'In progress ( ' + str(threadScan.get_percent()) + ' % )',
         2: 'Finished',
         -1: 'Failure'
     }[status_number]

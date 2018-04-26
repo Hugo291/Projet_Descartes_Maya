@@ -33,7 +33,6 @@ def show():
 def upload():
     """
     This page allow users to upload a pdf file for to be scan by ocr
-
     :return: files.html
     """
     from app.models.Form import ScanDocumentForm
@@ -149,7 +148,7 @@ def get_images(pdf_id, page_number):
 @scan_app.route('/page/<int:pdf_id>/<int:page_number>')
 def get_boxs(pdf_id, page_number):
     """
-    list of box and text of page of pdf
+    List of box and text of page of pdf
     :param pdf_id:
     :param page_number:
     :return: json list box of all word in page and text of page
@@ -177,6 +176,7 @@ def delete_file(pdf_id):
     try:
         from app.models.DataBase import PdfFile, db
         PdfFile.query.filter_by(id=pdf_id).delete()
+        db.session.commit()
         return redirect(url_for('scan_app.files'))
     except Exception as error:
         return jsonify({'error': 'During delete ( ' + str(error) + ' )'})

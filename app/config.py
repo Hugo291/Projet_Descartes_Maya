@@ -5,7 +5,9 @@ DEBUG = True
 SECRET_KEY = 'mysecret'
 
 # SQLAlchemy settings
-SQLALCHEMY_DATABASE_URI = 'mysql://descartes_gama:lpinfo@mysql-descartes.alwaysdata.net/descartes_mexique'
+#SQLALCHEMY_DATABASE_URI = 'mysql://descartes_gama:lpinfo@mysql-descartes.alwaysdata.net/descartes_mexique'
+SQLALCHEMY_DATABASE_URI = 'mysql://158403:12345@mysql-descartes-ocr.alwaysdata.net/descartes-ocr_hugo'
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False  # Avoids a SQLAlchemy Warning
 
 #Static
@@ -30,7 +32,7 @@ PARENT_DIR = os.path.abspath(os.path.join(CURRENT_DIR))
 CURRENT_DIR = os.getcwd()
 
 UPLOAD_DIR_NAME = "upload"
-#UPLOAD_DIR_NAME = os.path.join('app', UPLOAD_DIR_NAME)
+UPLOAD_DIR_NAME = os.path.join('app', UPLOAD_DIR_NAME)
 
 UPLOAD_DIR = os.path.join(PARENT_DIR, UPLOAD_DIR_NAME)
 

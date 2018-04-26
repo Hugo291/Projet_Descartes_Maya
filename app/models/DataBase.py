@@ -1,20 +1,5 @@
 from app import db
 
-# class BaseCRUD(db.Model):
-#
-#     def save(self):
-#         pass
-#
-#     def update(self):
-#         pass
-#
-#     def delete(self):
-#         pass
-#
-#     def get(self):
-#         pass
-
-
 """
     This table is for save the name and path of file
 """

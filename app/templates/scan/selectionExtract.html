@@ -1,6 +1,7 @@
 {% extends 'menu.html' %}
 
 {% block headpage %}
+         <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
 
      <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
      <script src="{{ url_for('static', filename='js/correction.js') }}"></script>
@@ -10,7 +11,7 @@
 
 {% block content %}
 
-<div class="container">
+<!--<div class="container">-->
 
     <div class="row mb-3">
         <h3 class="mt-1">Extract</h3>
@@ -84,6 +85,6 @@
 
       </div>
 
-    </div>
+{#    </div>#}
 
 {% endblock %}
