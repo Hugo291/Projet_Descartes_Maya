@@ -36,9 +36,10 @@ def load_user(user_id):
 
 from app.routes.users import users_app
 from app.routes.scan import scan_app
+from app.routes.translation import translation_app
 
 application.register_blueprint(users_app)
-#application.register_blueprint(translation_app)
+application.register_blueprint(translation_app)
 application.register_blueprint(scan_app)
 
 from app.template_filter.ValueStatus import value_status_file

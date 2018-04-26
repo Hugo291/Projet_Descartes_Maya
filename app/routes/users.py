@@ -21,7 +21,7 @@ def admin_required(f):
 
 
 users_app = Blueprint('users_app', __name__, template_folder='../templates/users')
-translation_app = Blueprint('translation_app', __name__, template_folder='../templates/translation')
+
 
 @users_app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,12 +32,12 @@ def login():
     if form.validate_on_submit():
         user = Account.query.filter_by(email=form.email.data).first()
         if user:
-            if user.pswd == form.password.data :
-			#if check_password_hash(user.pswd, form.password.data):
+            if user.pswd == form.password.data:
+                # if check_password_hash(user.pswd, form.password.data):
                 login_user(user)
                 return redirect(url_for('users_app.home'))
 
-        return 'Invalid username or password '+ user.pswd + " " +form.password.data
+        return 'Invalid username or password ' + user.pswd + " " + form.password.data
     return render_template('login.html', form=form, title='Sign in')
 
 
@@ -126,6 +126,7 @@ def settings():
 def logout():
     logout_user()
     return redirect(url_for('users_app.login'))
+
 
 def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
