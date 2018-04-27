@@ -38,7 +38,7 @@ def login():
                 return redirect(url_for('users_app.home'))
 
         return 'Invalid username or password ' + user.pswd + " " + form.password.data
-    return render_template('login.html', form=form, title='Sign in')
+    return render_template('login.html', form=form, title='Log in')
 
 
 @users_app.route("/forgot_password", methods=['GET', 'POST'])
@@ -49,7 +49,7 @@ def forgot_password():
         if user:
             send_details_account(form, 'forget_update')
             return "You will receive a new password in a short moment, please check your spam folder also."
-    return render_template('forgot_password.html', form=form)
+    return render_template('forgot_password.html', form=form, title='Forgot ?')
 
 
 @users_app.route('/home')
@@ -61,19 +61,19 @@ def home():
 @users_app.route("/search_a_translation")
 @login_required
 def search_translation():
-    return render_template('translation/search_translation.html')
+    return render_template('translation/search_translation.html', title='Search')
 
 
 @users_app.route("/translate_word")
 @login_required
 def translate_word():
-    return render_template('translation/translate_word.html')
+    return render_template('translation/translate_word.html', title='Translate a word')
 
 
 @users_app.route("/untranslated_words")
 @login_required
 def untranslated_words():
-    return render_template('translation/untranslated_words.html')
+    return render_template('translation/untranslated_words.html', title='List of untranslated words')
 
 
 @users_app.route("/import_words_PDF")
@@ -96,7 +96,7 @@ def add_user():
         send_details_account(form, 'new_user')
         return 'New user has been created, the password has been send to his/her email '
     # Mettre en popup
-    return render_template('add_user.html', form=form)
+    return render_template('add_user.html', form=form,  title='Add a new user')
 
 
 @users_app.route("/scan_OCR")
@@ -118,14 +118,14 @@ def settings():
             user_updated.pswd = generate_password_hash(form.pswd.data)
         db.session.commit()
         return redirect(url_for('account.edit_view'))
-    return render_template('settings.html', form=form)
+    return render_template('settings.html', form=form, title='Settings')
 
 
 @users_app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('users_app.login'))
+    return redirect(url_for('users_app.login'), title='Log in')
 
 
 def password_generator(size=6, chars=string.ascii_uppercase + string.digits):

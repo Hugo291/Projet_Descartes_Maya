@@ -24,26 +24,26 @@
           </a>
           <ul class="sidenav-second-level collapse" id="translationComponents">
             <li>
-              <a href="search_a_translation">Search a word</a>
+              <a href="{{ url_for('users_app.search_translation') }}">Search a word</a>
             </li>
             <li>
-              <a href="translate_word">Translate a word</a>
+              <a href="{{ url_for('users_app.translate_word') }}">Translate a word</a>
             </li>
 			<li>
-              <a href="untranslated_words">Untranslated words</a>
+              <a href="{{ url_for('users_app.untranslated_words') }}">Untranslated words</a>
             </li>
           </ul>
         </li>
 		{% if statut == 'Admin' %}
 			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Users">
-			  <a class="nav-link" href="/admin/account/">
+			  <a class="nav-link" href="{{ url_for('account.index_view') }}">
 				<i class="fa fa-fw fa-users"></i>
 				<span class="nav-link-text">Users</span>
 			  </a>
 			</li>
 		{% endif %}
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Settings">
-          <a class="nav-link" href="/settings">
+          <a class="nav-link" href="{{ url_for('users_app.settings') }}">
             <i class="fa fa-fw fa-cog"></i>
             <span class="nav-link-text">Settings</span>
           </a>
