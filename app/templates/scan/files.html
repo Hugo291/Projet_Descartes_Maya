@@ -18,7 +18,6 @@
                             <th scope="col">Open</th>
                             <th scope="col">Download</th>
                             <th scope="col">Delete</th>
-
                         </tr>
                     </thead>
 
@@ -32,7 +31,7 @@
                             <td>{{ file.name }}</td>
                             <td>{{ file.status | value_status_file }}</td>
 
-                            {% if file.status == 2 %}
+                            {% if file.status == 2 or file.status == -1%}
                                 <td><a href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="ml-2 fa fa-folder-open"></i></a></td>
                                 <td><a href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class="ml-4 fa fa-download"></i></a></td>
                                 <td><a href="{{ url_for('scan_app.delete_file', pdf_id= file.id ) }}"><i class="ml-3 fa fa-times-circle"></i></a></td>
