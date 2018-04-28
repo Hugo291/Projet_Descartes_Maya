@@ -17,6 +17,20 @@ def add_file(file):
     threadScan.append_file(file)
 
 
+def reset_all_file_unfinish():
+    """
+    Reset all record that not finish (put them in error)
+    """
+    from app.models.DataBase import PdfFile, db
+    files = PdfFile.query.filter((PdfFile.status == 0) | (PdfFile.status == 1)).all()
+    for file in files:
+        file.status = -1
+    db.session.commit()
+
+
+reset_all_file_unfinish()
+
+
 @scan_app.route('/', methods=['GET'])
 @scan_app.route('/upload', methods=['GET'])
 def show():
@@ -174,16 +188,26 @@ def delete_file(pdf_id):
     :return: files.html
     """
     try:
+
         from app.models.DataBase import PdfFile, db
         PdfFile.query.filter_by(id=pdf_id).delete()
-        #remove pdf
-        os.remove(os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf'))
-        #remove folder
-        from shutil import rmtree
-        rmtree(os.path.join(UPLOAD_DIR_JPG, str(pdf_id)))
+
+        try:
+            # remove pdf
+            os.remove(os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf'))
+        except Exception as exception:
+            print('Error during delete of pdf. ' + str(exception))
+
+        try:
+            # remove folder
+            from shutil import rmtree
+            rmtree(os.path.join(UPLOAD_DIR_JPG, str(pdf_id)))
+        except Exception as exception:
+            print('Error during delete folder jpg. ' + str(exception))
 
         db.session.commit()
         return redirect(url_for('scan_app.files'))
+
     except Exception as error:
         return jsonify({'error': 'During delete ( ' + str(error) + ' )'})
 
