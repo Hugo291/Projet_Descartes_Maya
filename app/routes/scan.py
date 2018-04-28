@@ -26,7 +26,7 @@ def show():
     """
     from app.models.Form import ScanDocumentForm
     form = ScanDocumentForm()
-    return render_template('upload.html', form=form)
+    return render_template('upload.html', form=form , title='Uplaod')
 
 
 @scan_app.route('/upload', methods=['POST'])
@@ -72,7 +72,7 @@ def selection_extract(pdf_id):
         # select all pages of pdf
         pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
 
-        return render_template('selectionExtract.html', pages=pages, pdf_id=pdf_id)
+        return render_template('selectionExtract.html', pages=pages, pdf_id=pdf_id , title='Selection')
     except Exception as E:
         return str(E)
 
@@ -126,7 +126,7 @@ def files():
     # select all files
     files = PdfFile.query.order_by(asc(PdfFile.status)).order_by(asc(PdfFile.name)).all()
 
-    return render_template('files.html', files=files)
+    return render_template('files.html', files=files , title='List files')
 
 
 @scan_app.route('/images/<int:pdf_id>/<int:page_number>')
