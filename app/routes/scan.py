@@ -26,7 +26,7 @@ def show():
     """
     from app.models.Form import ScanDocumentForm
     form = ScanDocumentForm()
-    return render_template('upload.html', form=form , title='Uplaod')
+    return render_template('upload.html', form=form, title='Uplaod')
 
 
 @scan_app.route('/upload', methods=['POST'])
@@ -72,7 +72,7 @@ def selection_extract(pdf_id):
         # select all pages of pdf
         pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
 
-        return render_template('selectionExtract.html', pages=pages, pdf_id=pdf_id , title='Selection')
+        return render_template('selectionExtract.html', pages=pages, pdf_id=pdf_id, title='Selection')
     except Exception as E:
         return str(E)
 
@@ -126,7 +126,7 @@ def files():
     # select all files
     files = PdfFile.query.order_by(asc(PdfFile.status)).order_by(asc(PdfFile.name)).all()
 
-    return render_template('files.html', files=files , title='List files')
+    return render_template('files.html', files=files, title='List files')
 
 
 @scan_app.route('/images/<int:pdf_id>/<int:page_number>')
@@ -141,7 +141,7 @@ def get_images(pdf_id, page_number):
     folder = os.path.join(UPLOAD_DIR_JPG, str(pdf_id))
     # the page file name
     filename = os.path.join(folder, str(page_number) + '.jpg')
-    #return the image
+    # return the image
     return send_file(filename, mimetype='image/jpg')
 
 
@@ -176,6 +176,12 @@ def delete_file(pdf_id):
     try:
         from app.models.DataBase import PdfFile, db
         PdfFile.query.filter_by(id=pdf_id).delete()
+        #remove pdf
+        os.remove(os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf'))
+        #remove folder
+        from shutil import rmtree
+        rmtree(os.path.join(UPLOAD_DIR_JPG, str(pdf_id)))
+
         db.session.commit()
         return redirect(url_for('scan_app.files'))
     except Exception as error:

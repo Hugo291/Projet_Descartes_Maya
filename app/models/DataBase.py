@@ -31,7 +31,7 @@ class PdfFile(db.Model):
 class OCRPage(db.Model):
     __tablename__ = 'ocr_page'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pdf_file_id = db.Column(db.Integer, db.ForeignKey('pdf_file.id'), nullable=False)
+    pdf_file_id = db.Column(db.Integer, db.ForeignKey('pdf_file.id', ondelete='CASCADE'), nullable=False)
     num_page = db.Column(db.String(100), nullable=False)
     text = db.Column(db.Text, nullable=True)
     text_corrector = db.Column(db.Text, nullable=True)
@@ -51,7 +51,7 @@ class OCRPage(db.Model):
 class OcrBoxWord(db.Model):
     __tablename__ = 'ocr_box_word'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pdf_page_id = db.Column(db.Integer, db.ForeignKey('ocr_page.id'), nullable=False)
+    pdf_page_id = db.Column(db.Integer, db.ForeignKey('ocr_page.id', ondelete='CASCADE'), nullable=False)
     size_width = db.Column(db.Integer)
     size_height = db.Column(db.Integer)
     position_top = db.Column(db.Integer)
