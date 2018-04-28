@@ -64,6 +64,16 @@ def upload():
         # insert of pdf
         pdf = PdfFile(name=file.filename)
 
+        print('Range : '+str(form.has_range))
+        #set range
+        if form.has_range:
+            print("set range")
+            pdf.range_max = form.file_range_max.data
+            pdf.range_min = form.file_range_min.data
+
+        print(pdf.__str__())
+
+
         # commit
         db.session.add(pdf)
         db.session.commit()

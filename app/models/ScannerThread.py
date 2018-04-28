@@ -6,6 +6,8 @@ from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG
 from app.models.OCR import OCR
 from app.models.Pdf import convert_to_jpg, page_number
 
+cal = lambda current, total: int(current * 100 / total)
+
 
 class ScannerThread(Thread):
 
@@ -17,7 +19,6 @@ class ScannerThread(Thread):
         print("init ")
         self.__list_file = []
         self.__percent = 0
-        self.cal = lambda current, total: int(current * 100 / total)
 
     def run(self):
         """
@@ -29,19 +30,18 @@ class ScannerThread(Thread):
             time.sleep(10)
 
             while self.has_waiting_file():
+                # try:
+                self.set_percent(0)
 
-                try:
-                    self.set_percent(0)
+                self.convert_scan_file()
 
-                    self.convert_scan_file()
+                self.delete_last_file_scaned()
 
-                    self.delete_last_file_scaned()
-
-                    self.set_percent(0)
-                except Exception as error:
-
-                    print("Erreur (run): " + str(error))
-                    print(error)
+                self.set_percent(0)
+                # except Exception as error:
+                #
+                #     print("Erreur (run): " + str(error))
+                #     print(error)
 
     def has_waiting_file(self):
         """
@@ -84,9 +84,8 @@ class ScannerThread(Thread):
             dir_dest = os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))
 
             for index in range(pdf_page_number):
-                print("Convertion of image (" + str(index) + ")")
                 convert_to_jpg(file_path, dir_dest, num_page=index)
-                self.set_percent(int(self.cal(current=index, total=pdf_page_number) / 2))
+                self.set_percent(int(cal(current=index, total=pdf_page_number) / 2))
 
 
         else:
@@ -98,7 +97,7 @@ class ScannerThread(Thread):
         Analyse the file
         :param number_file:
         """
-        from app.models.DataBase import OCRPage,  db, OcrBoxWord
+        from app.models.DataBase import OCRPage, db, OcrBoxWord
 
         # ckeck if the fodler exist
         if os.path.isdir(os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))):
@@ -110,12 +109,9 @@ class ScannerThread(Thread):
 
             for index in range(number_file):
 
-                image_ocr = OCRPage(
-                    pdf_file_id=self.get_last_file_scaned(),
-                    num_page=index
-                )
+                image_ocr = OCRPage(pdf_file_id=self.get_last_file_scaned(), num_page=index)
 
-                path_file_img = os.path.join(folder, '{}.jpg'.format(str(index)))
+                path_file_img = os.path.join(folder, '{0}.jpg'.format(str(index)))
 
                 print("Scan file : " + str(index))
 
@@ -140,7 +136,7 @@ class ScannerThread(Thread):
                 # commit all word box in folder
                 db.session.commit()
 
-                self.set_percent(int(self.cal(current=index, total=number_file) / 2 + 50))
+                self.set_percent(int(cal(current=index, total=number_file) / 2 + 50))
 
         else:
 
@@ -154,20 +150,17 @@ class ScannerThread(Thread):
         from app.models.DataBase import PdfFile, db
 
         # pdf file bd
-        pdf_file_db = PdfFile.query.filter_by(
-            id=self.get_last_file_scaned()
-        ).first()
+        pdf_file_db = PdfFile.query.filter_by(id=self.get_last_file_scaned()).first()
 
         try:
+
             # set status In progress
             pdf_file_db.status = 1
             db.session.commit()
 
             # the page  number pdf
             file_path = os.path.join(UPLOAD_DIR_PDF, str(self.get_last_file_scaned()) + ".pdf")
-            pdf_page_number = page_number(file_path)
-
-            print("pdf page number : " + str(pdf_page_number))
+            pdf_page_number = page_number(path_pdf_file=file_path)
 
             # convert to jpg
             self.convert_pdf_to_jpg(pdf_page_number)
@@ -180,7 +173,7 @@ class ScannerThread(Thread):
             db.session.commit()
 
         except Exception as exception:
-            print(exception)
+
             print("Erreur (convert_scan_file): " + str(exception))
             pdf_file_db.status = -1
             db.session.commit()
@@ -195,5 +188,6 @@ class ScannerThread(Thread):
         """
         :param percent:
         """
-        print(str(percent) + "%")
-        self.__percent = percent
+        if str(self.__percent) != percent:
+            print("Actually file : " + str(self.__percent) + " %")
+            self.__percent = percent
