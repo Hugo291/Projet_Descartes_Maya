@@ -1,15 +1,12 @@
 import random
 import string
 from functools import wraps
-
 from flask import Blueprint, redirect, url_for, render_template, abort
 from flask_login import login_user, current_user, login_required, logout_user
 from flask_mail import Message
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from app import db, mail
 from app.models.userModels import LoginForm, Account, ResetPasswordForm, SettingsForm, NewUserForm
-
 
 def admin_required(f):
     @wraps(f)
@@ -58,36 +55,6 @@ def home():
     return render_template('menu.html', title='Home')
 
 
-@users_app.route("/search_a_translation")
-@login_required
-def search_translation():
-    return render_template('translation/search_translation.html', title='Search')
-
-
-@users_app.route("/translate_word")
-@login_required
-def translate_word():
-    return render_template('translation/translate_word.html', title='Translate a word')
-
-
-@users_app.route("/untranslated_words")
-@login_required
-def untranslated_words():
-    return render_template('translation/untranslated_words.html', title='List of untranslated words')
-
-
-@users_app.route("/import_words_PDF")
-@login_required
-def import_words_PDF():
-    return render_template('import_words_PDF.html')
-
-
-@users_app.route("/add_words_from_PDF")
-@login_required
-def add_words_from_PDF():
-    return render_template('add_words_from_PDF.html')
-
-
 @users_app.route("/admin/account/add_user", methods=['GET', 'POST'])
 @login_required
 def add_user():
@@ -125,7 +92,7 @@ def settings():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('users_app.login'), title='Log in')
+    return redirect(url_for('users_app.login'))
 
 
 def password_generator(size=6, chars=string.ascii_uppercase + string.digits):

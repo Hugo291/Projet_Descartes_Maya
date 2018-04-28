@@ -1,11 +1,7 @@
-﻿# Pour utiliser Flask, rediriger vers une autre route et afficher un template
-from flask import Flask, abort
-# Pour connecter à la BDD
+﻿from flask import Flask, abort
 from flask_sqlalchemy import SQLAlchemy
-# gestion des paramètres de l'utilisateur connecté
 from flask_login import LoginManager, current_user
 from flask_bootstrap import Bootstrap
-# gestion des utilisateurs
 from flask_admin import Admin
 from flask_mail import Mail, Message
 from functools import wraps
