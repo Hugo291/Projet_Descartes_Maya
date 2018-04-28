@@ -31,10 +31,14 @@
                             <td>{{ file.id }}</td>
                             <td>{{ file.name }}</td>
                             <td>{{ file.status | value_status_file }}</td>
-                            <td><a href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="ml-2 fa fa-folder-open"></i></a></td>
-                            <td><a href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class="ml-4 fa fa-download"></i></a></td>
-                            <td><a href="{{ url_for('scan_app.delete_file', pdf_id= file.id ) }}"><i class="ml-3 fa fa-times-circle"></i></a></td>
 
+                            {% if file.status == 2 %}
+                                <td><a href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="ml-2 fa fa-folder-open"></i></a></td>
+                                <td><a href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class="ml-4 fa fa-download"></i></a></td>
+                                <td><a href="{{ url_for('scan_app.delete_file', pdf_id= file.id ) }}"><i class="ml-3 fa fa-times-circle"></i></a></td>
+                            {% else %}
+                                <td></td><td></td><td></td>
+                            {% endif %}
                         </tr>
 
                     {% endfor %}
