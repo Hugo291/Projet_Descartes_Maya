@@ -16,7 +16,6 @@ class ScannerThread(Thread):
         Construct
         """
         super().__init__()
-        print("init ")
         self.__list_file = []
         self.__percent = 0
 
@@ -25,23 +24,13 @@ class ScannerThread(Thread):
         Loop infinit and if detect a file in list , the
         """
         super().run()
-        print("Thread Run")
         while True:
             time.sleep(10)
-
             while self.has_waiting_file():
-                # try:
                 self.set_percent(0)
-
                 self.convert_scan_file()
-
                 self.delete_last_file_scaned()
-
                 self.set_percent(0)
-                # except Exception as error:
-                #
-                #     print("Erreur (run): " + str(error))
-                #     print(error)
 
     def has_waiting_file(self):
         """
@@ -69,7 +58,7 @@ class ScannerThread(Thread):
         Add the file to the list of files that will be scanned
         :param pdf_file_id: the pdf id
         """
-        print("Add file : " + str(pdf_file_id))
+        print("The file n° " + str(pdf_file_id)+" is add to thread")
         self.__list_file.append(pdf_file_id)
 
     def convert_scan_file(self):
@@ -84,52 +73,52 @@ class ScannerThread(Thread):
         folder_jpg = os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))
         file_path = os.path.join(UPLOAD_DIR_PDF, str(self.get_last_file_scaned()) + ".pdf")
 
-        # try:
+        try:
 
-        # set status In progress
-        pdf_file_db.status = 1
-        db.session.commit()
-
-        pdf_page_number = pdf_file_db.num_page
-
-        for index in range(pdf_page_number):
-
-            print(file_path, folder_jpg, index)
-
-            convert_to_jpg(file_path, folder_jpg, num_page=index)
-
-            image_ocr = OCRPage(pdf_file_id=self.get_last_file_scaned(), num_page=index)
-
-            path_file_img = os.path.join(folder_jpg, '{0}.jpg'.format(str(index)))
-
-            scanner_ocr = OCR(path_file_img)
-            image_ocr.text = scanner_ocr.scan_text()
-
-            db.session.add(image_ocr)
+            # set status In progress
+            pdf_file_db.status = 1
             db.session.commit()
 
-            id_pdf_page = image_ocr.id
+            min_range, max_range = pdf_file_db.get_range
 
-            box_word = scanner_ocr.scan_data()
+            for index in range(min_range, max_range):
 
-            for box in box_word:
-                box_word = OcrBoxWord(pdf_page_id=id_pdf_page, box=box)
-                db.session.add(box_word)
+                convert_to_jpg(file_path, folder_jpg, num_page=index)
 
-            # commit all word box in folder
+                image_ocr = OCRPage(pdf_file_id=self.get_last_file_scaned(), num_page=index)
+
+                path_file_img = os.path.join(folder_jpg, '{0}.jpg'.format(str(index)))
+
+                scanner_ocr = OCR(path_file_img)
+                image_ocr.text = scanner_ocr.scan_text()
+
+                db.session.add(image_ocr)
+                db.session.commit()
+
+                id_pdf_page = image_ocr.id
+
+                box_word = scanner_ocr.scan_data()
+
+                for box in box_word:
+                    box_word = OcrBoxWord(pdf_page_id=id_pdf_page, box=box)
+                    db.session.add(box_word)
+
+                # commit all word box in folder
+                db.session.commit()
+
+                print("Page num °" + str(index) + " finished ")
+
+                self.set_percent(int(cal(current=index, total=max_range-min_range)))
+
+            # set staus finish
+            print("The file is finish")
+            pdf_file_db.status = 2
             db.session.commit()
-            print("Page " + str(index) + "ended ")
-            self.set_percent(int(cal(current=index, total=pdf_page_number)))
 
-        # set staus finish
-        pdf_file_db.status = 2
-        db.session.commit()
-
-        # except Exception as exception:
-        #
-        #     print("Error during convertion : " + str(exception))
-        #     pdf_file_db.status = -1
-        #     db.session.commit()
+        except Exception as exception:
+            print(exception)
+            pdf_file_db.status = -1
+            db.session.commit()
 
     def __str__(self):
         return str(self.get_percent)

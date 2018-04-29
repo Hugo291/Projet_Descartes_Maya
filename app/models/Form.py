@@ -33,11 +33,12 @@ class ScanDocumentForm(FlaskForm):
         for _ in range(10):
             self.tmp_file_name += str(randint(0, 9))
 
+        # path tmp file
         self.tmp_file_name += self.filePdf.data.filename
-
         tmp_path = os.path.join(TMP_DIR, str(self.tmp_file_name))
         self.filePdf.data.save(tmp_path)
 
+        # get number page
         self.num_page = int(Pdf.page_number(path_pdf_file=tmp_path))
 
         # if digits equal to 0
@@ -47,8 +48,8 @@ class ScanDocumentForm(FlaskForm):
         self.has_range = True
 
         # Check if min is higher than max
-        if int(self.file_range_min.data) > int(self.file_range_max.data):
-            self.errors['range'] = 'The min can\'t be higher than max'
+        if int(self.file_range_min.data) > int(self.file_range_max.data) or int(self.file_range_min.data) < 1:
+            self.errors['range'] = 'The min can\'t be higher than max and start min by 1'
             return False
 
         # ckeck if max is higher than number pdf's page
@@ -67,7 +68,7 @@ class ScanDocumentForm(FlaskForm):
         import shutil
 
         shutil.move(os.path.join(TMP_DIR, self.tmp_file_name), os.path.join(UPLOAD_DIR_PDF, self.tmp_file_name))
-        os.rename(os.path.join(UPLOAD_DIR_PDF, self.tmp_file_name), os.path.join(UPLOAD_DIR_PDF, str(name)+".pdf"))
+        os.rename(os.path.join(UPLOAD_DIR_PDF, self.tmp_file_name), os.path.join(UPLOAD_DIR_PDF, str(name) + ".pdf"))
 
         self.close()
 
