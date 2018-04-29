@@ -4,6 +4,11 @@
 <div class="card card-login mx-auto mt-5">
       <div class="card-header">Add a new user</div>
       <div class="card-body">
+	  {% if email == 'sended' %}
+		<div class="alert alert-primary" role="alert">
+			New user has been created, the password has been send to his/her email
+		</div>
+	  {% endif %}
          <form method="POST" action="./add_user">
 		{{ form.hidden_tag() }}
           <div class="form-group">

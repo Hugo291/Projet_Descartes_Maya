@@ -33,8 +33,8 @@ def login():
             if check_password_hash(user.pswd, form.password.data):
                 login_user(user)
                 return redirect(url_for('users_app.home'))
-
-        return 'Invalid username or password ' + generate_password_hash(form.password.data)
+        return render_template('login.html', error='invalid', title='Log in', form=form)
+		#return 'Invalid username or password ' + generate_password_hash(form.password.data)
     return render_template('login.html', form=form, title='Log in')
 
 
@@ -45,7 +45,8 @@ def forgot_password():
         user = Account.query.filter_by(email=form.email.data).first()
         if user:
             send_details_account(form, 'forget_update')
-            return "You will receive a new password in a short moment, please check your spam folder also."
+            return render_template('forgot_password.html', email='sended', title='Forgot ?', form=form)
+			#return "You will receive a new password in a short moment, please check your spam folder also."
     return render_template('forgot_password.html', form=form, title='Forgot ?')
 
 
@@ -61,8 +62,8 @@ def add_user():
     form = NewUserForm()
     if form.validate_on_submit():
         send_details_account(form, 'new_user')
-        return 'New user has been created, the password has been send to his/her email '
-    # Mettre en popup
+        return render_template('add_user.html', form=form, title='Add a new user', email='sended')
+		#return 'New user has been created, the password has been send to his/her email '
     return render_template('add_user.html', form=form, title='Add a new user')
 
 
