@@ -105,8 +105,6 @@ class ScannerThread(Thread):
             scanner_ocr = OCR(path_file_img)
             image_ocr.text = scanner_ocr.scan_text()
 
-            print(image_ocr.text)
-
             db.session.add(image_ocr)
             db.session.commit()
 

@@ -19,7 +19,10 @@ class ScanDocumentForm(FlaskForm):
         super().__init__()
 
     def validate_on_submit(self):
+        """
 
+        :return: bool True if os
+        """
         if not super().validate_on_submit():
             return False
 
@@ -57,8 +60,22 @@ class ScanDocumentForm(FlaskForm):
         return True
 
     def save(self, name):
-
+        """
+        Move file from tmp to uplaod/pdf
+        :param name: the name of file example : filename.pdf
+        """
         import shutil
 
         shutil.move(os.path.join(TMP_DIR, self.tmp_file_name), os.path.join(UPLOAD_DIR_PDF, self.tmp_file_name))
         os.rename(os.path.join(UPLOAD_DIR_PDF, self.tmp_file_name), os.path.join(UPLOAD_DIR_PDF, str(name)+".pdf"))
+
+        self.close()
+
+    def close(self):
+        """
+        Remove tmp file
+        """
+        try:
+            os.remove(os.path.join(TMP_DIR, self.tmp_file_name))
+        except Exception as e:
+            print(e)

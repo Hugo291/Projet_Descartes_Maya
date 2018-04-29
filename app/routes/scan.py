@@ -83,6 +83,7 @@ def upload():
 
         return redirect(url_for('scan_app.files'))
     else:
+        form.close()
         return str(form.errors)
 
 
