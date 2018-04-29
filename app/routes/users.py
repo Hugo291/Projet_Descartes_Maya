@@ -34,7 +34,7 @@ def login():
                 login_user(user)
                 return redirect(url_for('users_app.home'))
 
-        return 'Invalid username or password ' + user.pswd + " " + form.password.data
+        return 'Invalid username or password ' + generate_password_hash(form.password.data)
     return render_template('login.html', form=form, title='Log in')
 
 

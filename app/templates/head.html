@@ -9,11 +9,11 @@
   <meta name="author" content="">
   <title>{{title}}</title>
   <!-- Bootstrap core CSS-->
-  <link href="{{ url_for('static', filename='styles/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
   <!-- Custom fonts for this template-->
-  <link href="{{ url_for('static', filename='styles/vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
   <!-- Custom styles for this template-->
-  <link href="{{ url_for('static', filename='styles/css/sb-admin.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet" type="text/css">
 
 
 
@@ -22,17 +22,13 @@
 		{% endblock %}
   <!-- Bootstrap core JavaScript-->
 
-  <script src="{{ url_for('static', filename='styles/vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='styles/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
   <!-- Core plugin JavaScript-->
-  <script src="{{ url_for('static', filename='styles/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-  <!-- Page level plugin JavaScript-->
-  <script src="{{ url_for('static', filename='styles/vendor/chart.js/Chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
   <!-- Custom scripts for all pages-->
-  <script src="{{ url_for('static', filename='styles/js/sb-admin.min.js') }}"></script>
-  <!-- Custom scripts for this page-->
-  <script src="{{ url_for('static', filename='styles/js/sb-admin-charts.min.js1') }}"></script>
-
+  <script src="{{ url_for('static', filename='js/sb-admin.min.js') }}"></script>
+  
      {% block headpage %}
   {% endblock %}
 
