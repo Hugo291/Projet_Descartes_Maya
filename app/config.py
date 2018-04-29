@@ -34,6 +34,10 @@ CURRENT_DIR = os.getcwd()
 UPLOAD_DIR_NAME = "upload"
 UPLOAD_DIR_NAME = os.path.join('app', UPLOAD_DIR_NAME)
 
+TMP_DIR_NAME = "tmp"
+TMP_DIR = os.path.join('app', TMP_DIR_NAME)
+
+
 UPLOAD_DIR = os.path.join(PARENT_DIR, UPLOAD_DIR_NAME)
 
 UPLOAD_DIR_PDF = os.path.join(UPLOAD_DIR, "pdf")
