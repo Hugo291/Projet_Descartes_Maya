@@ -1,3 +1,5 @@
+import datetime
+
 from app import db
 
 """
@@ -14,6 +16,7 @@ class PdfFile(db.Model):
     range_max = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
     pages = db.relationship('OCRPage', cascade='all , delete')
+    logs = db.relationship('LogPdf' , cascade='all , delete')
 
     def __init__(self, id=None, name=None, num_page=None):
         self.id = id
@@ -39,6 +42,22 @@ class PdfFile(db.Model):
 """
     This table save all text scaned by OCR
 """
+
+
+class LogPdf(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pdf_file_id = db.Column(db.Integer, db.ForeignKey('pdf_file.id', ondelete='CASCADE'), nullable=False)
+    time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    message = db.Column(db.Text, nullable=True)
+    type = db.Column(db.Integer, default=0)
+
+    def __init__(self, pdf_file_id, message, type=0):
+        self.pdf_file_id = pdf_file_id
+        self.message = message
+        self.type = type
+
+        db.session.add(self)
+        db.session.commit()
 
 
 class OCRPage(db.Model):

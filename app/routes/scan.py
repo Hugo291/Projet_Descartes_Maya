@@ -21,13 +21,14 @@ def reset_all_file_unfinish():
     """
     Reset all record that not finish (put them in error)
     """
-    from app.models.DataBase import PdfFile, db
+    from app.models.DataBase import PdfFile, db, LogPdf
 
-    #select all file not finish or in progress
+    # select all file not finish or in progress
     files = PdfFile.query.filter((PdfFile.status == 0) | (PdfFile.status == 1)).all()
 
-    #error = -1
+    # error = -1
     for file in files:
+        LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
         file.status = -1
 
     db.session.commit()
@@ -64,9 +65,9 @@ def upload():
 
         file = form.filePdf.data
 
-        pdf = PdfFile(name=file.filename ,num_page=form.num_page)
+        pdf = PdfFile(name=file.filename, num_page=form.num_page)
 
-        #set range
+        # set range
         if form.has_range:
             print("set range")
             pdf.range_max = form.file_range_max.data
@@ -124,13 +125,11 @@ def download(pdf_id):
 
     # foreach pages
     for page in pages:
-        f.write(
-            ("-" * 50 + "\n \t\t\t Num : " + page.num_page + "\n" + "-" * 50 + "\n").encode(sys.stdout.encoding,
-                                                                                            errors='Error'))
+        f.write(("-" * 50 + "\n \t\t\t Num : " + page.num_page + "\n" + "-" * 50 + "\n").encode(sys.stdout.encoding,
+                                                                                                errors='*Error*'))
         f.write(
             (str(page.text if page.text_corrector is None else page.text_corrector) + '\n').encode(sys.stdout.encoding,
-                                                                                                   errors='Error'))
-
+                                                                                                   errors='*Error*'))
     f.close()
 
     # return file
@@ -233,3 +232,14 @@ def correction(pdf_id, num_page):
     ocr_page.text_corrector = request.form['text']
     db.session.commit()
     return 'success'
+
+
+@scan_app.route('/details/<int:pdf_id>')
+def details(pdf_id):
+    from app.models.DataBase import PdfFile, LogPdf
+    from sqlalchemy import desc
+
+    pdf_file = PdfFile.query.filter_by(id=pdf_id).first()
+    last_logs = LogPdf.query.filter_by(pdf_file_id=pdf_file.id).order_by(desc(LogPdf.id)).limit(5)
+
+    return render_template('details.html', pdf_file=pdf_file, last_logs=last_logs)
