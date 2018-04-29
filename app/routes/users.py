@@ -8,6 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import db, mail
 from app.models.userModels import LoginForm, Account, ResetPasswordForm, SettingsForm, NewUserForm
 
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -29,8 +30,7 @@ def login():
     if form.validate_on_submit():
         user = Account.query.filter_by(email=form.email.data).first()
         if user:
-            if user.pswd == form.password.data:
-                # if check_password_hash(user.pswd, form.password.data):
+            if check_password_hash(user.pswd, form.password.data):
                 login_user(user)
                 return redirect(url_for('users_app.home'))
 
@@ -63,7 +63,7 @@ def add_user():
         send_details_account(form, 'new_user')
         return 'New user has been created, the password has been send to his/her email '
     # Mettre en popup
-    return render_template('add_user.html', form=form,  title='Add a new user')
+    return render_template('add_user.html', form=form, title='Add a new user')
 
 
 @users_app.route("/scan_OCR")

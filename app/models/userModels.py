@@ -13,7 +13,7 @@ class Account(db.Model, UserMixin):
     '''
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60))
-    pswd = db.Column(db.String(60))
+    pswd = db.Column(db.String(256))
     isAdmin = db.Column(db.Boolean)
 
 
