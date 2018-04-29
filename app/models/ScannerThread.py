@@ -6,7 +6,7 @@ from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG
 from app.models.OCR import OCR
 from app.models.Pdf import convert_to_jpg, page_number
 
-cal = lambda current, total: int(current * 100 / total)
+cal = lambda current, total: int((current + 1) * 100 / total)
 
 
 class ScannerThread(Thread):
@@ -72,111 +72,66 @@ class ScannerThread(Thread):
         print("Add file : " + str(pdf_file_id))
         self.__list_file.append(pdf_file_id)
 
-    def convert_pdf_to_jpg(self, pdf_page_number):
-        """
-
-        :param pdf_page_number: number page of pdf
-        :return: the page number of the file
-        """
-        if os.path.isfile(os.path.join(UPLOAD_DIR_PDF, str(self.get_last_file_scaned()) + ".pdf")):
-
-            file_path = os.path.join(UPLOAD_DIR_PDF, str(self.get_last_file_scaned()) + ".pdf")
-            dir_dest = os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))
-
-            for index in range(pdf_page_number):
-                convert_to_jpg(file_path, dir_dest, num_page=index)
-                self.set_percent(int(cal(current=index, total=pdf_page_number) / 2))
-
-
-        else:
-            print("The file is not supported by the system")
-            raise Exception('The file is not supported by the system')
-
-    def ocr_jpg(self, number_file):
-        """
-        Analyse the file
-        :param number_file:
-        """
-        from app.models.DataBase import OCRPage, db, OcrBoxWord
-
-        # ckeck if the fodler exist
-        if os.path.isdir(os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))):
-
-            # folder with all jpg
-            folder = os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))
-
-            # for all file
-
-            for index in range(number_file):
-
-                image_ocr = OCRPage(pdf_file_id=self.get_last_file_scaned(), num_page=index)
-
-                path_file_img = os.path.join(folder, '{0}.jpg'.format(str(index)))
-
-                print("Scan file : " + str(index))
-
-                scanner_ocr = OCR(path_file_img)
-                image_ocr.text = scanner_ocr.scan_text()
-
-                db.session.add(image_ocr)
-                db.session.commit()
-
-                id_pdf_page = image_ocr.id
-
-                box_word = scanner_ocr.scan_data()
-
-                for box in box_word:
-                    box_word = OcrBoxWord(
-                        pdf_page_id=id_pdf_page,
-                        box=box
-                    )
-
-                    db.session.add(box_word)
-
-                # commit all word box in folder
-                db.session.commit()
-
-                self.set_percent(int(cal(current=index, total=number_file) / 2 + 50))
-
-        else:
-
-            print('The folder is not found')
-            raise Exception('The folder is not found')
-
     def convert_scan_file(self):
         """
         Convert the file and scan this
         """
-        from app.models.DataBase import PdfFile, db
+        from app.models.DataBase import PdfFile, OcrBoxWord, OCRPage, db
 
         # pdf file bd
         pdf_file_db = PdfFile.query.filter_by(id=self.get_last_file_scaned()).first()
+        # the page  number pdf
+        folder_jpg = os.path.join(UPLOAD_DIR_JPG, str(self.get_last_file_scaned()))
+        file_path = os.path.join(UPLOAD_DIR_PDF, str(self.get_last_file_scaned()) + ".pdf")
 
-        try:
+        # try:
 
-            # set status In progress
-            pdf_file_db.status = 1
+        # set status In progress
+        pdf_file_db.status = 1
+        db.session.commit()
+
+        pdf_page_number = pdf_file_db.num_page
+
+        for index in range(pdf_page_number):
+
+            print(file_path, folder_jpg, index)
+
+            convert_to_jpg(file_path, folder_jpg, num_page=index)
+
+            image_ocr = OCRPage(pdf_file_id=self.get_last_file_scaned(), num_page=index)
+
+            path_file_img = os.path.join(folder_jpg, '{0}.jpg'.format(str(index)))
+
+            scanner_ocr = OCR(path_file_img)
+            image_ocr.text = scanner_ocr.scan_text()
+
+            print(image_ocr.text)
+
+            db.session.add(image_ocr)
             db.session.commit()
 
-            # the page  number pdf
-            file_path = os.path.join(UPLOAD_DIR_PDF, str(self.get_last_file_scaned()) + ".pdf")
-            pdf_page_number = page_number(path_pdf_file=file_path)
+            id_pdf_page = image_ocr.id
 
-            # convert to jpg
-            self.convert_pdf_to_jpg(pdf_page_number)
+            box_word = scanner_ocr.scan_data()
 
-            # ocr the image
-            self.ocr_jpg(pdf_page_number)
+            for box in box_word:
+                box_word = OcrBoxWord(pdf_page_id=id_pdf_page, box=box)
+                db.session.add(box_word)
 
-            # set staus finish
-            pdf_file_db.status = 2
+            # commit all word box in folder
             db.session.commit()
+            print("Page " + str(index) + "ended ")
+            self.set_percent(int(cal(current=index, total=pdf_page_number)))
 
-        except Exception as exception:
+        # set staus finish
+        pdf_file_db.status = 2
+        db.session.commit()
 
-            print("Erreur (convert_scan_file): " + str(exception))
-            pdf_file_db.status = -1
-            db.session.commit()
+        # except Exception as exception:
+        #
+        #     print("Error during convertion : " + str(exception))
+        #     pdf_file_db.status = -1
+        #     db.session.commit()
 
     def __str__(self):
         return str(self.get_percent)
@@ -188,6 +143,5 @@ class ScannerThread(Thread):
         """
         :param percent:
         """
-        if str(self.__percent) != percent:
-            print("Actually file : " + str(self.__percent) + " %")
-            self.__percent = percent
+        print("File : " + str(self.__percent) + " %")
+        self.__percent = percent

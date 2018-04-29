@@ -7,7 +7,7 @@ from PyPDF2 import PdfFileReader
 def page_number(path_pdf_file=None, stream_pdf_file=None):
     if path_pdf_file is not None:
         f = open(path_pdf_file, 'rb')
-        num = PdfFileReader(f).getNumPages()
+        num = PdfFileReader(f, strict=False).getNumPages()
         f.close()
         return num
     print("Read the pdf with stream")

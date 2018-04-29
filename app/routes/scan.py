@@ -22,9 +22,14 @@ def reset_all_file_unfinish():
     Reset all record that not finish (put them in error)
     """
     from app.models.DataBase import PdfFile, db
+
+    #select all file not finish or in progress
     files = PdfFile.query.filter((PdfFile.status == 0) | (PdfFile.status == 1)).all()
+
+    #error = -1
     for file in files:
         file.status = -1
+
     db.session.commit()
 
 
@@ -55,31 +60,23 @@ def upload():
 
     if form.validate_on_submit():
 
-        # save in dbb
         from app.models.DataBase import PdfFile, db
 
-        # file form
         file = form.filePdf.data
 
-        # insert of pdf
-        pdf = PdfFile(name=file.filename)
+        pdf = PdfFile(name=file.filename ,num_page=form.num_page)
 
-        print('Range : '+str(form.has_range))
         #set range
         if form.has_range:
             print("set range")
             pdf.range_max = form.file_range_max.data
             pdf.range_min = form.file_range_min.data
 
-        print(pdf.__str__())
-
-
-        # commit
         db.session.add(pdf)
         db.session.commit()
 
         # save the file
-        file.save(os.path.join(UPLOAD_DIR_PDF, str(pdf.id) + '.pdf'))
+        form.save(pdf.id)
 
         # add file to thread for scan
         add_file(pdf.id)

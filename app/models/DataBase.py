@@ -12,13 +12,13 @@ class PdfFile(db.Model):
     status = db.Column(db.Integer, default=0)
     range_min = db.Column(db.Integer)
     range_max = db.Column(db.Integer)
+    num_page = db.Column(db.Integer)
     pages = db.relationship('OCRPage', cascade='all , delete')
 
-    def __init__(self, id=None, name=None, path=None, folder=None):
+    def __init__(self, id=None, name=None, num_page=None):
         self.id = id
         self.name = name
-        self.path = path
-        self.folder = folder
+        self.num_page = num_page
 
     def __str__(self):
         return 'id : ' + str(self.id) + ' name : ' + str(self.name)+" Range min/max : "+str(self.range_min)+"/"+str(self.range_max)
