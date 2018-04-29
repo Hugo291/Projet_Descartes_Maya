@@ -5,8 +5,8 @@ DEBUG = True
 SECRET_KEY = 'mysecret'
 
 # SQLAlchemy settings
-SQLALCHEMY_DATABASE_URI = 'mysql://descartes_gama:lpinfo@mysql-descartes.alwaysdata.net/descartes_mexique2'
-#SQLALCHEMY_DATABASE_URI = 'mysql://158403:12345@mysql-descartes-ocr.alwaysdata.net/descartes-ocr_hugo'
+#SQLALCHEMY_DATABASE_URI = 'mysql://descartes_gama:lpinfo@mysql-descartes.alwaysdata.net/descartes_mexique2'
+SQLALCHEMY_DATABASE_URI = 'mysql://158403:12345@mysql-descartes-ocr.alwaysdata.net/descartes-ocr_hugo'
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False  # Avoids a SQLAlchemy Warning
 
