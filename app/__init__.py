@@ -21,6 +21,9 @@ from app.models.userModels import Account
 import app.models.DataBase
 
 
+db.drop_all()
+db.create_all()
+
 @application.route('/')
 def home_page():
     return 'home start'
@@ -40,6 +43,8 @@ application.register_blueprint(translation_app)
 application.register_blueprint(scan_app)
 
 from app.template_filter.ValueStatus import value_status_file
+
+print("Start")
 
 if __name__ == "__main__":
     application.run()

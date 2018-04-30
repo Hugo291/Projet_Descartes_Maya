@@ -11,13 +11,13 @@ class PdfFile(db.Model):
     __tablename__ = 'pdf_file'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.Integer, default=0)
+    state = db.Column(db.Integer, default=0)
     range_min = db.Column(db.Integer)
     range_max = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
     date_upload = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     pages = db.relationship('OCRPage', cascade='all , delete')
-    logs = db.relationship('LogPdf' , cascade='all , delete')
+    logs = db.relationship('LogPdf', cascade='all , delete')
 
     def __init__(self, id=None, name=None, num_page=None):
         self.id = id

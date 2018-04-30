@@ -76,8 +76,8 @@ class ScannerThread(Thread):
 
         try:
 
-            # set status In progress
-            pdf_file_db.status = 1
+            # set state In progress
+            pdf_file_db.state = 1
 
             min_range, max_range = pdf_file_db.get_range
 
@@ -126,17 +126,16 @@ class ScannerThread(Thread):
 
             # set staus finish
 
-            pdf_file_db.status = 2
+            pdf_file_db.state = 2
             db.session.commit()
 
             self.log('Ce fichier a bien été analysé avec succés', type=1)
 
             print("The file is finish")
 
-
         except Exception as exception:
             print('Error scan : ' + str(exception))
-            pdf_file_db.status = -1
+            pdf_file_db.state = -1
             db.session.commit()
             self.log('Une exception est survenue pendant l\'analyse -> ' + str(exception), type=-1)
 

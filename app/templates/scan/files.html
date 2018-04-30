@@ -31,7 +31,7 @@
 
                             <td>{{ file.id }}</td>
                             <td>{{ file.name }}</td>
-                            <td>{{ (file.status | value_status_file )|safe }}</td>
+                            <td>{{ (file.state | value_state_file )|safe }}</td>
 
                             {% if file.status == 2 or file.status == -1%}
                                 <td><a href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="ml-2 fa fa-folder-open"></i></a></td>
