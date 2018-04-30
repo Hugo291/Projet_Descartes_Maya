@@ -83,31 +83,31 @@ class ScannerThread(Thread):
 
             for index in range(min_range, max_range):
 
-                self.log('Debut de la convertion de la page n°{0}'.format(str(index)))
+                self.log('Start of the convert process of page n°{0}'.format(str(index)))
 
                 convert_to_jpg(file_path, folder_jpg, num_page=index)
 
                 path_file_img = os.path.join(folder_jpg, '{0}.jpg'.format(str(index)))
 
                 self.log(
-                    'Fin de la convertion de la page n°{0} .L\'image de la page est disponible au chemin -> {1}'.format(
+                    'Convert process of page n°{0} completed .Picture of the page available at this link -> {1}'.format(
                         index, path_file_img))
 
                 image_ocr = OCRPage(pdf_file_id=self.get_last_file_scaned(), num_page=index)
 
-                self.log('Debut du scan du fichier n°{0}'.format(str(index)))
+                self.log('Start of scanning process of file n°{0}'.format(str(index)))
 
                 scanner_ocr = OCR(path_file_img)
                 image_ocr.text = scanner_ocr.scan_text()
 
-                self.log('Fin du scan du fichier n°{0}'.format(str(index)))
+                self.log('End of the scanning process of file n°{0}'.format(str(index)))
 
                 db.session.add(image_ocr)
                 db.session.commit()
 
                 id_pdf_page = image_ocr.id
 
-                self.log('Debut de l\'aquition des box de la page ocr n°{0}'.format(str(index)))
+                self.log('Start of the box recovering process from page n°{0}'.format(str(index)))
 
                 box_word = scanner_ocr.scan_data()
 
@@ -118,7 +118,7 @@ class ScannerThread(Thread):
                 # commit all word box in folder
                 db.session.commit()
 
-                self.log('Fin de l\'quistion du texte de la page n°{0}'.format(str(index)))
+                self.log('End of the box recovering process from page n°{0}'.format(str(index)))
 
                 print("Page num °" + str(index) + " finished ")
 
@@ -129,7 +129,7 @@ class ScannerThread(Thread):
             pdf_file_db.state = 2
             db.session.commit()
 
-            self.log('Ce fichier a bien été analysé avec succés', type=1)
+            self.log('File analysed with success', type=1)
 
             print("The file is finish")
 
@@ -137,7 +137,7 @@ class ScannerThread(Thread):
             print('Error scan : ' + str(exception))
             pdf_file_db.state = -1
             db.session.commit()
-            self.log('Une exception est survenue pendant l\'analyse -> ' + str(exception), type=-1)
+            self.log('An exception raised during the process -> ' + str(exception), type=-1)
 
     def __str__(self):
         return str(self.get_percent)
