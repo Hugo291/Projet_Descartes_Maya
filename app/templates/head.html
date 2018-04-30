@@ -16,6 +16,11 @@
   <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet" type="text/css">
 
 
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+
 
 </head>
 		{% block menu_login %}
@@ -28,8 +33,8 @@
   <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
   <!-- Custom scripts for all pages-->
   <script src="{{ url_for('static', filename='js/sb-admin.min.js') }}"></script>
-  
-     {% block headpage %}
+  <script src="{{ url_for('static', filename='js/grayscale.min.js') }}"></script>
+  {% block headpage %}
   {% endblock %}
 
 </body>
