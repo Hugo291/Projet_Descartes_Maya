@@ -10,24 +10,44 @@
         <div class="card-body">
 
                 <div class="card p-4 mb-4">
-                    <div class="row">
-                        <div class="col-6"><span class="font-weight-bold">Name : </span> {{ pdf_file.name }}</div>
-                        <div class="col-6"><span class="font-weight-bold">Number Page : </span>{{ pdf_file.num_page }}</div>
+
+                    <div class="row m-1">
+                        <div class="col"><span class="font-weight-bold">Name : </span> {{ pdf_file.name }}</div>
+                        <div class="col"><span class="font-weight-bold">Number Page : </span>{{ pdf_file.num_page }}</div>
                     </div>
-                    <div class="row">
-                        <div class="col-6"><span class="font-weight-bold">Range Min/Max : </span>
+
+                    <div class="row m-1">
+                        <div class="col">
+                            <span class="font-weight-bold">Range Min/Max : </span>
                             {% if pdf_file.has_range() == True %}
                                 {{ pdf_file.range_min }}/{{ pdf_file.range_max }}
                             {% else %}
                                 OFF
                             {% endif %}
                         </div>
+                        <div class="col">
+                            <span><span class="font-weight-bold">Status : </span>  {{ (pdf_file.status | value_status_file )|safe }}</span>
+                        </div>
+
+                    </div>
+
+                <div class="row m-1">
+                    <div class="col">
+                        <span class="font-weight-bold">Upload at : </span><span>{{ pdf_file.date_upload.strftime('%Y-%m-%d %h:%M') }}</span>
+                    </div>
+                </div>
+
+                <div class="row m-1">
+                        <div class="col">
+                            <a class="btn btn-primary" href="{{ url_for('scan_app.pdf', pdf_id= pdf_file.id ) }}"><i class="fa fa-file-pdf-o m-1"></i>View Pdf</a>
+                        </div>
+
                     </div>
                 </div>
 
                 <div class="row">
 
-                    <div class="col-6">
+                    <div class="col">
                         <div class="card mb-3">
 
                         <div class="card-header">
@@ -45,7 +65,7 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                {% for log in last_logs %}
+                                {% for log in last_logs|reverse %}
                                     {% if log.type == 1 %}
                                         <tr class="bg-success">
                                     {% elif log.type == -1 %}

@@ -15,6 +15,7 @@ class PdfFile(db.Model):
     range_min = db.Column(db.Integer)
     range_max = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
+    date_upload = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     pages = db.relationship('OCRPage', cascade='all , delete')
     logs = db.relationship('LogPdf' , cascade='all , delete')
 

@@ -243,3 +243,9 @@ def details(pdf_id):
     last_logs = LogPdf.query.filter_by(pdf_file_id=pdf_file.id).order_by(desc(LogPdf.id)).limit(5)
 
     return render_template('details.html', pdf_file=pdf_file, last_logs=last_logs)
+
+
+@scan_app.route('/pdf/<int:pdf_id>')
+def pdf(pdf_id):
+    file_path = os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf')
+    return send_file(file_path)
