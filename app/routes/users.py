@@ -13,9 +13,11 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if Account.query.get(current_user.get_id()).isAdmin is False:
+            print('No access')
             return abort(403)
         else:
             return f(*args, **kwargs)
+
     return decorated_function
 
 
@@ -35,7 +37,7 @@ def login():
                 login_user(user)
                 return redirect(url_for('users_app.home'))
         return render_template('login.html', error='invalid', title='Log in', form=form)
-		#return 'Invalid username or password ' + generate_password_hash(form.password.data)
+    # return 'Invalid username or password ' + generate_password_hash(form.password.data)
     return render_template('login.html', form=form, title='Log in')
 
 
@@ -47,7 +49,7 @@ def forgot_password():
         if user:
             send_details_account(form, 'forget_update')
             return render_template('forgot_password.html', email='sended', title='Forgot ?', form=form)
-			#return "You will receive a new password in a short moment, please check your spam folder also."
+        # return "You will receive a new password in a short moment, please check your spam folder also."
     return render_template('forgot_password.html', form=form, title='Forgot ?')
 
 
@@ -64,7 +66,7 @@ def add_user():
     if form.validate_on_submit():
         send_details_account(form, 'new_user')
         return render_template('add_user.html', form=form, title='Add a new user', email='sended')
-		#return 'New user has been created, the password has been send to his/her email '
+    # return 'New user has been created, the password has been send to his/her email '
     return render_template('add_user.html', form=form, title='Add a new user')
 
 

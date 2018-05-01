@@ -2,10 +2,15 @@ import datetime
 
 from app import db
 from app.models.userModels import Account
+
 """
     This table is for save the name and path of file
 """
 
+PDF_ERROR = -1
+PDF_SUCCESS = 2
+PDF_IN_PROGRESS = 1
+PDF_WAIT = 0
 
 class PdfFile(db.Model):
     __tablename__ = 'pdf_file'
@@ -22,7 +27,7 @@ class PdfFile(db.Model):
     pages = db.relationship('OCRPage', cascade='all , delete')
     logs = db.relationship('LogPdf', cascade='all , delete')
 
-    def __init__(self, id=None, name=None, num_page=None , pdf_owner= None):
+    def __init__(self, id=None, name=None, num_page=None, pdf_owner=None):
         self.id = id
         self.name = name
         self.num_page = num_page
@@ -42,6 +47,14 @@ class PdfFile(db.Model):
             return 0, self.num_page
         else:
             return self.range_min - 1, self.range_max
+
+    def serialize(self):
+        from app.routes.scan import threadScan
+        return {
+            'id': self.id,
+            'progress': threadScan.get_file_progress(pdf_id=self.id),
+            'state': self.state
+        }
 
 
 """

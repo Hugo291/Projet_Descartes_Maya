@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect
+from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect, json
 from flask_login import login_required, current_user
 from sqlalchemy import asc
 
@@ -303,3 +303,11 @@ def edit(pdf_id):
                                    current_filename=pdf.name)
     else:
         return render_template('edit.html', form=form, current_filename=pdf.name)
+
+
+@scan_app.route('/progress')
+def files_progress():
+    from app.models.DataBase import PdfFile
+    files = PdfFile.query.filter( (PdfFile.state == 1) | (PdfFile.state == 2) ).all()
+    print(files)
+    return jsonify(files=[file.serialize() for file in files])

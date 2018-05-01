@@ -154,3 +154,9 @@ class ScannerThread(Thread):
 
     def log(self, message, type=0):
         LogPdf(pdf_file_id=self.get_last_file_scaned(), message=message, type=type)
+
+    def get_file_progress(self, pdf_id):
+        if pdf_id is self.get_last_file_scaned():
+            return self.get_percent()
+        else:
+            return 0
