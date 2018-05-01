@@ -14,7 +14,8 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         if Account.query.get(current_user.get_id()).isAdmin is False:
             return abort(403)
-
+        else:
+            return f(*args, **kwargs)
     return decorated_function
 
 

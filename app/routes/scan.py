@@ -2,10 +2,12 @@ import os
 import sys
 
 from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect
+from flask_login import login_required
 from sqlalchemy import asc
 
 from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG, UPLOAD_DIR_TXT
 from app.models.ScannerThread import ScannerThread
+from app.routes.users import admin_required
 
 scan_app = Blueprint('scan_app', __name__, template_folder='../templates/scan', url_prefix='/scan')
 
@@ -39,6 +41,8 @@ reset_all_file_unfinish()
 
 @scan_app.route('/', methods=['GET'])
 @scan_app.route('/upload', methods=['GET'])
+@login_required
+@admin_required
 def show():
     """
     Page for uplaod file
@@ -50,6 +54,8 @@ def show():
 
 
 @scan_app.route('/upload', methods=['POST'])
+@login_required
+@admin_required
 def upload():
     """
     This page allow users to upload a pdf file for to be scan by ocr
@@ -92,6 +98,8 @@ def upload():
 
 
 @scan_app.route('/selectionExtract/<int:pdf_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def selection_extract(pdf_id):
     from app.models.DataBase import OCRPage
     try:
@@ -104,6 +112,8 @@ def selection_extract(pdf_id):
 
 
 @scan_app.route('/downlaod/<int:pdf_id>')
+@login_required
+@admin_required
 def download(pdf_id):
     """
     This page is for downlaod the document after correction
@@ -147,6 +157,8 @@ def download(pdf_id):
 
 
 @scan_app.route('/files', methods=['GET'])
+@login_required
+@admin_required
 def files():
     """
     This page list all file in bdd
@@ -161,6 +173,8 @@ def files():
 
 
 @scan_app.route('/images/<int:pdf_id>/<int:page_number>')
+@login_required
+@admin_required
 def get_images(pdf_id, page_number):
     """
 
@@ -177,6 +191,8 @@ def get_images(pdf_id, page_number):
 
 
 @scan_app.route('/page/<int:pdf_id>/<int:page_number>')
+@login_required
+@admin_required
 def get_boxs(pdf_id, page_number):
     """
     List of box and text of page of pdf
@@ -198,6 +214,8 @@ def get_boxs(pdf_id, page_number):
 
 
 @scan_app.route('/delete/<int:pdf_id>')
+@login_required
+@admin_required
 def delete_file(pdf_id):
     """
     Delete the file on dbb
@@ -231,6 +249,8 @@ def delete_file(pdf_id):
 
 
 @scan_app.route('/correct/<int:pdf_id>/<int:num_page>', methods=['POST', 'GET'])
+@login_required
+@admin_required
 def correction(pdf_id, num_page):
     """
     Correct the text of page
@@ -246,6 +266,8 @@ def correction(pdf_id, num_page):
 
 
 @scan_app.route('/details/<int:pdf_id>')
+@login_required
+@admin_required
 def details(pdf_id):
     from app.models.DataBase import PdfFile, LogPdf
     from sqlalchemy import desc
@@ -257,6 +279,8 @@ def details(pdf_id):
 
 
 @scan_app.route('/pdf/<int:pdf_id>')
+@login_required
+@admin_required
 def pdf(pdf_id):
     file_path = os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf')
     return send_file(file_path)

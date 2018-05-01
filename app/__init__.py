@@ -21,8 +21,8 @@ from app.models.userModels import Account
 import app.models.DataBase
 
 
-db.drop_all()
-db.create_all()
+# db.drop_all()
+# db.create_all()
 
 @application.route('/')
 def home_page():
@@ -33,10 +33,12 @@ def home_page():
 def load_user(user_id):
     return Account.query.get(int(user_id))
 
+
 @application.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-	
+
+
 from app.routes.users import users_app
 from app.routes.scan import scan_app
 from app.routes.translation import translation_app
