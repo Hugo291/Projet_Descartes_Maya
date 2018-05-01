@@ -50,10 +50,12 @@ class PdfFile(db.Model):
 
     def serialize(self):
         from app.routes.scan import threadScan
+        from app.template_filter.ValueStatus import value_status_file
         return {
             'id': self.id,
             'progress': threadScan.get_file_progress(pdf_id=self.id),
-            'state': self.state
+            'state': self.state,
+            'html': value_status_file(self.state)
         }
 
 

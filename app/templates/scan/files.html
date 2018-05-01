@@ -1,5 +1,9 @@
 {% extends 'menu.html' %}
+{% block headpage %}
 
+    <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+
+{% endblock %}
 {% block content %}
 <div class="container">
 {#        <a class="btn btn-primary" href="{{url_for('scan_app.upload')}}" >Uploaod</a>#}
@@ -27,7 +31,7 @@
 
                     {% for file in files %}
 
-                        <tr>
+                        <tr class="table-line">
 
                             <td>{{ file.id }}</td>
                             <td>{{ file.name }}</td>

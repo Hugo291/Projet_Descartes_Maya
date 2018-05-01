@@ -307,7 +307,6 @@ def edit(pdf_id):
 
 @scan_app.route('/progress')
 def files_progress():
-    from app.models.DataBase import PdfFile
-    files = PdfFile.query.filter( (PdfFile.state == 1) | (PdfFile.state == 2) ).all()
-    print(files)
+    from app.models.DataBase import PdfFile, PDF_WAIT, PDF_IN_PROGRESS
+    files = PdfFile.query.filter((PdfFile.state == PDF_IN_PROGRESS) | (PdfFile.state == PDF_WAIT)).all()
     return jsonify(files=[file.serialize() for file in files])
