@@ -125,15 +125,22 @@ def download(pdf_id):
 
     # foreach pages
     for page in pages:
-        f.write(("-" * 50 + "\n \t\t\t Num : " + page.num_page + "\n" + "-" * 50 + "\n").encode(sys.stdout.encoding,
-                                                                                                errors='*Error*'))
+        f.write(("-" * 50 + "\n \t\t\t Num : " + str(int(page.num_page) + 1) + "\n" + "-" * 50 + "\n").encode(
+            sys.stdout.encoding, errors='*Error*'))
         f.write(
             (str(page.text if page.text_corrector is None else page.text_corrector) + '\n').encode(sys.stdout.encoding,
                                                                                                    errors='*Error*'))
     f.close()
 
     # return file
-    return send_file(file_path)
+    r = send_file(file_path)
+
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+
+    return r
 
 
 @scan_app.route('/files', methods=['GET'])
