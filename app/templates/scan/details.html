@@ -33,7 +33,12 @@
 
                 <div class="row m-1">
                     <div class="col">
-                        <span class="font-weight-bold">Upload at : </span><span>{{ pdf_file.date_upload.strftime('%Y-%m-%d %h:%M') }}</span>
+                        <span class="font-weight-bold">Upload at : </span><span>{{ pdf_file.date_upload.strftime("%y/%m/%d %H:%M:%S") }}</span>
+
+                    </div>
+                     <div class="col">
+                        <span class="font-weight-bold">Upload by : </span><span>{{ pdf_file.owner.email }}</span>
+
                     </div>
                 </div>
 

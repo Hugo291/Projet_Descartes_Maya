@@ -2,7 +2,7 @@ import os
 import sys
 
 from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect
-from flask_login import login_required
+from flask_login import login_required , current_user
 from sqlalchemy import asc
 
 from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG, UPLOAD_DIR_TXT
@@ -71,8 +71,8 @@ def upload():
         from app.models.DataBase import PdfFile, db
 
         file = form.filePdf.data
-
-        pdf = PdfFile(name=file.filename, num_page=form.num_page)
+        print('current_user -> '+str(current_user.get_id()))
+        pdf = PdfFile(name=file.filename, num_page=form.num_page , pdf_owner=current_user.get_id())
 
         # set range
         if form.has_range:
@@ -130,14 +130,11 @@ def download(pdf_id):
     # create file path
     file_path = os.path.join(UPLOAD_DIR_TXT, str(filename) + '.txt')
 
-    # select all pages of pdf
-    pages = OCRPage.query.filter_by(pdf_file_id=str(pdf_id)).all()
-
     # create file
     f = open(file_path, "wb")
 
     # foreach pages
-    for page in pages:
+    for page in pdf_file.pages:
         f.write(("-" * 50 + "\n \t\t\t Num : " + str(int(page.num_page) + 1) + "\n" + "-" * 50 + "\n").encode(
             sys.stdout.encoding, errors='*Error*'))
         f.write(
