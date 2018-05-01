@@ -1,7 +1,7 @@
 {% extends 'menu.html' %}
 {% block headpage %}
 
-{#    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>#}
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap-fileselect.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/file-input.css') }}">
 
@@ -9,17 +9,17 @@
 
 {% block content %}
 
-{% if error %}
-    <div class="alert alert-danger" role="alert">
-        {{error}}
-    </div>
-{% endif %}
 
     <div class="container">
 
       <div class="row">
         <div class="col-md-12">
           <h1 class="display-1">Scan</h1>
+
+    <div class="state">
+
+    </div>
+
         </div>
       </div>
 
@@ -64,7 +64,5 @@
 
     </div>
 
-   <script>
-        $('#input-file').fileselect();
-    </script>
+
 {% endblock %}

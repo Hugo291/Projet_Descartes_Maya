@@ -8,7 +8,8 @@ from app.config import TMP_DIR, UPLOAD_DIR_PDF
 
 
 class ScanDocumentForm(FlaskForm):
-    filePdf = FileField(label="File", validators=[FileRequired(), FileAllowed(['pdf'], 'Pdf only!!')])
+
+    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'), FileAllowed(['pdf'], 'Pdf only!!')])
     file_range_min = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="Start")
     file_range_max = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="End")
 
@@ -49,13 +50,13 @@ class ScanDocumentForm(FlaskForm):
 
         # Check if min is higher than max
         if int(self.file_range_min.data) > int(self.file_range_max.data) or int(self.file_range_min.data) < 1:
-            self.errors['range'] = 'The min can\'t be higher than max and start min by 1'
+            self.errors['range'] = ['The min can\'t be higher than max and start min by 1']
             return False
 
         # ckeck if max is higher than number pdf's page
 
         if self.num_page < self.file_range_max.data:
-            self.errors['range'] = 'The max can\' be higher than the max of pdf\'s page'
+            self.errors['range'] = ['The max can\' be higher than the max of pdf\'s page']
             return False
 
         return True
@@ -78,5 +79,6 @@ class ScanDocumentForm(FlaskForm):
         """
         try:
             os.remove(os.path.join(TMP_DIR, self.tmp_file_name))
-        except Exception as e:
-            print(e)
+        except Exception as error:
+            print("File Form.py function : close -> " + str(error))
+

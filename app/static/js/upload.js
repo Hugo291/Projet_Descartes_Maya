@@ -18,7 +18,7 @@ $(document).ready(function() {
 
 					if (e.lengthComputable) {
                         let percent = Math.round((e.loaded / e.total) * 100);
-                        $('#progressBar').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%');
+                        setProgress(percent);
 					}
 
 				});
@@ -32,24 +32,48 @@ $(document).ready(function() {
 			contentType : false,
 
 			success : function(data) {
-				alert(data);
-				if(data.url !== undefined){
-					console.log('redirect');
-					window.location=data.url;
-				} else  if(data.error !== undefined){
-					console.log('error detected');
-					alert(data.error);
-				} else{
-					alert('Données inconnues : '+data)
+
+				if(data.success !== undefined){
+				    $('.state').html(
+				        '<div class="alert alert-success alert-dismissible" role="alert"> <strong>Success : </strong> '+data.success+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+                        );
+
+                        window.setTimeout(function(){
+                            window.location='/scan/files';
+                        } , 3000);
+					//
+				} else {
+					 $('.state').html(
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> '+data.error+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+                    );
+                    setProgress(0);
+
 				}
+			} ,
+
+			error : function(data){
+			    setProgress(0);
+			    $('.state').html(
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> '+data+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+                        );
 			}
 
 		});
 
 	});
 
+
+
+	function setProgress(percent){
+        $('#progressBar').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%');
+	}
+
 });
 
 
+$(function(){
 
+  $('#input-file').fileselect();
+
+});
 

@@ -55,6 +55,7 @@ def upload():
     This page allow users to upload a pdf file for to be scan by ocr
     :return: files.html
     """
+
     from app.models.Form import ScanDocumentForm
 
     form = ScanDocumentForm()
@@ -82,10 +83,12 @@ def upload():
         # add file to thread for scan
         add_file(pdf.id)
 
-        return redirect(url_for('scan_app.files'))
+        # return redirect(url_for('scan_app.files'))
+        return jsonify(success='upload completed')
     else:
         form.close()
-        return str(form.errors)
+        # return str(form.errors)
+        return jsonify(error=[value[0] for key, value in form.errors.items()])
 
 
 @scan_app.route('/selectionExtract/<int:pdf_id>', methods=['GET', 'POST'])
@@ -97,7 +100,7 @@ def selection_extract(pdf_id):
 
         return render_template('selectionExtract.html', pages=pages, pdf_id=pdf_id, title='Selection')
     except Exception as E:
-        return str(E)
+        return "File Scan.py function : selection_extract -> " + str(E)
 
 
 @scan_app.route('/downlaod/<int:pdf_id>')
@@ -223,6 +226,7 @@ def delete_file(pdf_id):
         return redirect(url_for('scan_app.files'))
 
     except Exception as error:
+        print("File : Scan.py function : delete_file -> " + str(error))
         return jsonify({'error': 'During delete ( ' + str(error) + ' )'})
 
 

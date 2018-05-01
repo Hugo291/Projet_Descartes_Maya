@@ -133,11 +133,11 @@ class ScannerThread(Thread):
 
             print("The file is finish")
 
-        except Exception as exception:
-            print('Error scan : ' + str(exception))
+        except Exception as error:
+            print("function : convert_scan_file -> " + str(error))
             pdf_file_db.state = -1
             db.session.commit()
-            self.log('An exception raised during the process -> ' + str(exception), type=-1)
+            self.log('An exception raised during the process -> ' + str(error), type=-1)
 
     def __str__(self):
         return str(self.get_percent)
