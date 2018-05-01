@@ -12,13 +12,14 @@
                 <div class="card p-4 mb-4">
 
                     <div class="row m-1">
-                        <div class="col"><span class="font-weight-bold">Name : </span> {{ pdf_file.name }}</div>
+                        <div class="col">
+                            <span class="font-weight-bold">Name : </span> {{ pdf_file.name }}</div><a class="fa fa-edit mt-1" href="{{ url_for('scan_app.edit', pdf_id= pdf_file.id ) }}"></a>
                         <div class="col"><span class="font-weight-bold">Number Page : </span>{{ pdf_file.num_page }}</div>
                     </div>
 
                     <div class="row m-1">
                         <div class="col">
-                            <span class="font-weight-bold">Range Min/Max : </span>
+                            <span class="font-weight-bold">Range Start/End : </span>
                             {% if pdf_file.has_range() == True %}
                                 {{ pdf_file.range_min }}/{{ pdf_file.range_max }}
                             {% else %}

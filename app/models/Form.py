@@ -2,14 +2,15 @@ import os
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import IntegerField, validators
+from wtforms import IntegerField, validators, StringField
+from wtforms.validators import InputRequired, Length
 
 from app.config import TMP_DIR, UPLOAD_DIR_PDF
 
 
 class ScanDocumentForm(FlaskForm):
-
-    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'), FileAllowed(['pdf'], 'Pdf only!!')])
+    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'),
+                                                  FileAllowed(['pdf'], 'Pdf only!!')])
     file_range_min = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="Start")
     file_range_max = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="End")
 
@@ -82,3 +83,6 @@ class ScanDocumentForm(FlaskForm):
         except Exception as error:
             print("File Form.py function : close -> " + str(error))
 
+
+class EditNameFileForm(FlaskForm):
+    filename = StringField(validators=[InputRequired(), Length(min=2, max=200)], label="Filename")

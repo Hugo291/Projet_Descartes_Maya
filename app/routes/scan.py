@@ -2,7 +2,7 @@ import os
 import sys
 
 from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect
-from flask_login import login_required , current_user
+from flask_login import login_required, current_user
 from sqlalchemy import asc
 
 from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG, UPLOAD_DIR_TXT
@@ -71,8 +71,7 @@ def upload():
         from app.models.DataBase import PdfFile, db
 
         file = form.filePdf.data
-        print('current_user -> '+str(current_user.get_id()))
-        pdf = PdfFile(name=file.filename, num_page=form.num_page , pdf_owner=current_user.get_id())
+        pdf = PdfFile(name=file.filename, num_page=form.num_page, pdf_owner=current_user.get_id())
 
         # set range
         if form.has_range:
@@ -281,3 +280,26 @@ def details(pdf_id):
 def pdf(pdf_id):
     file_path = os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf')
     return send_file(file_path)
+
+
+@scan_app.route('/edit/<int:pdf_id>', methods=["GET", "POST"])
+@login_required
+@admin_required
+def edit(pdf_id):
+    from app.models.Form import EditNameFileForm
+    from app.models.DataBase import PdfFile, db
+
+    pdf = PdfFile.query.filter_by(id=int(pdf_id)).first()
+    form = EditNameFileForm()
+
+    if request.method == 'POST':
+        print('Bonjour')
+        if form.validate_on_submit():
+            pdf.name = form.filename.data
+            db.session.commit()
+            return render_template('edit.html', success='Filename has been successfully changed')
+        else:
+            return render_template('edit.html', form=form, error=[value for key, value in form.errors.items()],
+                                   current_filename=pdf.name)
+    else:
+        return render_template('edit.html', form=form, current_filename=pdf.name)
