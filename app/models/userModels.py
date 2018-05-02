@@ -12,7 +12,7 @@ class Account(db.Model, UserMixin):
     which refers to the same name table
     '''
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60))
+    email = db.Column(db.String(60), unique=True)
     pswd = db.Column(db.String(256))
     isAdmin = db.Column(db.Boolean)
 
