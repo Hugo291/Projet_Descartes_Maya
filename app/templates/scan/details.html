@@ -21,7 +21,7 @@
                         <div class="col">
                             <span class="font-weight-bold">Range Start/End : </span>
                             {% if pdf_file.has_range() == True %}
-                                {{ pdf_file.range_min }}/{{ pdf_file.range_max }}
+                                {{ pdf_file.range_start }}/{{ pdf_file.range_end }}
                             {% else %}
                                 OFF
                             {% endif %}
