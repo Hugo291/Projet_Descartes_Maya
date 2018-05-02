@@ -69,12 +69,6 @@ def add_user():
     # return 'New user has been created, the password has been send to his/her email '
     return render_template('add_user.html', form=form, title='Add a new user')
 
-
-@users_app.route("/scan_OCR")
-def scan_OCR():
-    return render_template('upload_PDF.html')
-
-
 @users_app.route("/settings", methods=['GET', 'POST'])
 @login_required
 def settings():
