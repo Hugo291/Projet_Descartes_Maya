@@ -26,9 +26,11 @@ import app.models.DataBase
 db.drop_all()
 # print('Start Create')
 db.create_all()
-
-Account(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), isAdmin=1)
-Account(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), isAdmin=1)
+try:
+    Account(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), isAdmin=1)
+    Account(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), isAdmin=1)
+except Exception as exception:
+    print(exception)
 
 db.session.commit()
 
