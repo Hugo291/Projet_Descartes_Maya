@@ -18,8 +18,8 @@ class PdfFile(db.Model):
     name = db.Column(db.String(100), nullable=False)
     state = db.Column(db.Integer, default=0)
     pdf_owner = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
-    range_min = db.Column(db.Integer)
-    range_max = db.Column(db.Integer)
+    range_start = db.Column(db.Integer)
+    range_end = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
     date_upload = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
@@ -34,19 +34,19 @@ class PdfFile(db.Model):
         self.pdf_owner = pdf_owner
 
     def __str__(self):
-        return 'id : ' + str(self.id) + ' name : ' + str(self.name) + " Range min/max : " + str(
-            self.range_min) + "/" + str(self.range_max)
+        return 'id : ' + str(self.id) + ' name : ' + str(self.name) + " Range start/end : " + str(
+            self.range_start) + "/" + str(self.range_end)
 
     def has_range(self):
-        var = False if self.range_max is None and self.range_min is None else True
+        var = False if self.range_end is None and self.range_start is None else True
         return var
 
     @property
     def get_range(self):
-        if self.range_min is None and self.range_max is None:
+        if self.range_start is None and self.range_end is None:
             return 0, self.num_page
         else:
-            return self.range_min - 1, self.range_max
+            return self.range_start - 1, self.range_end
 
     def serialize(self):
         from app.routes.scan import threadScan

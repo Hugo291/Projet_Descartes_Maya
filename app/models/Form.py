@@ -9,10 +9,9 @@ from app.config import TMP_DIR, UPLOAD_DIR_PDF
 
 
 class ScanDocumentForm(FlaskForm):
-    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'),
-                                                  FileAllowed(['pdf'], 'Pdf only!!')])
-    file_range_min = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="Start")
-    file_range_max = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="End")
+    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'),                                                  FileAllowed(['pdf'], 'Pdf only!!')])
+    file_range_start = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="Start")
+    file_range_end = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="End")
 
     def __init__(self, *arg, **kwarg):
         self.has_range = False
@@ -44,19 +43,19 @@ class ScanDocumentForm(FlaskForm):
         self.num_page = int(Pdf.page_number(path_pdf_file=tmp_path))
 
         # if digits equal to 0
-        if int(self.file_range_min.data) == int(self.file_range_max.data) == 0:
+        if int(self.file_range_start.data) == int(self.file_range_end.data) == 0:
             return True
 
         self.has_range = True
 
         # Check if min is higher than max
-        if int(self.file_range_min.data) > int(self.file_range_max.data) or int(self.file_range_min.data) < 1:
+        if int(self.file_range_start.data) > int(self.file_range_end.data) or int(self.file_range_start.data) < 1:
             self.errors['range'] = ['The min can\'t be higher than max and start min by 1']
             return False
 
         # ckeck if max is higher than number pdf's page
 
-        if self.num_page < self.file_range_max.data:
+        if self.num_page < self.file_range_end.data:
             self.errors['range'] = ['The max can\' be higher than the max of pdf\'s page']
             return False
 

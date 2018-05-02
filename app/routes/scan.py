@@ -76,8 +76,8 @@ def upload():
         # set range
         if form.has_range:
             print("set range")
-            pdf.range_max = form.file_range_max.data
-            pdf.range_min = form.file_range_min.data
+            pdf.range_end = form.file_range_end.data
+            pdf.range_start = form.file_range_start.data
 
         db.session.add(pdf)
         db.session.commit()

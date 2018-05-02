@@ -79,9 +79,9 @@ class ScannerThread(Thread):
             # set state In progress
             pdf_file_db.state = 1
 
-            min_range, max_range = pdf_file_db.get_range
+            range_start, range_end = pdf_file_db.get_range
 
-            for index in range(min_range, max_range):
+            for index in range(range_start, range_end):
 
                 self.log('Start of the convert process of page n°{0}'.format(str(index)))
 
@@ -122,7 +122,7 @@ class ScannerThread(Thread):
 
                 print("Page num °" + str(index) + " finished ")
 
-                self.set_percent(int(cal(current=index, total=max_range - min_range)))
+                self.set_percent(int(cal(current=index, total=range_end - range_start)))
 
             # set staus finish
 
