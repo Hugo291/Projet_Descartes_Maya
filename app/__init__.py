@@ -20,9 +20,10 @@ mail = Mail(application)
 from app.models.userModels import Account
 import app.models.DataBase
 
-
-# db.drop_all()
-# db.create_all()
+#print('Start drop')
+#db.drop_all()
+#print('Start Create')
+#db.create_all()
 
 @application.route('/')
 def home_page():
