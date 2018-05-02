@@ -59,7 +59,7 @@ function setInfoPage(ctx , pdf_id , page_number) {
             setTextAreaText(results.text);
 
             //end load
-            endLoad('The page n°'+page_number+' is loaded');
+            endLoad('The page n°'+(parseInt(page_number)+1)+' is loaded');
         }});
 }
 //set value in text area
