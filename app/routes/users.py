@@ -10,6 +10,9 @@ from app.models.userModels import LoginForm, Account, ResetPasswordForm, Setting
 
 
 def admin_required(f):
+    '''
+    check if the connected user is an admin else the access to the page is restricted
+    '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if Account.query.get(current_user.get_id()).isAdmin is False:
@@ -26,6 +29,9 @@ users_app = Blueprint('users_app', __name__, template_folder='../templates/users
 
 @users_app.route('/login', methods=['GET', 'POST'])
 def login():
+    '''
+    a login form is shown, if the access is granted a specific dashboard will be shown according to the user status 
+    '''
     if current_user.is_authenticated:
         return redirect(url_for('users_app.home'))
     form = LoginForm()
@@ -43,6 +49,9 @@ def login():
 
 @users_app.route("/forgot_password", methods=['GET', 'POST'])
 def forgot_password():
+    '''
+    allows to an existing user to receive via email a new password if the user forgot the previous one
+    '''
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user = Account.query.filter_by(email=form.email.data).first()
@@ -56,12 +65,18 @@ def forgot_password():
 @users_app.route('/home')
 @login_required
 def home():
+    '''
+    show a homepage for the dashboard
+    '''
     return render_template('menu.html', title='Home')
 
 
 @users_app.route("/admin/account/add_user", methods=['GET', 'POST'])
 @login_required
 def add_user():
+    '''
+    allows to add a new user who can be an administrator or a translator
+    '''
     form = NewUserForm()
     if form.validate_on_submit():
         send_details_account(form, 'new_user')
@@ -72,6 +87,9 @@ def add_user():
 @users_app.route("/settings", methods=['GET', 'POST'])
 @login_required
 def settings():
+    '''
+    allows to an user to change his/her own settings
+    '''
     item = Account.query.get(current_user.get_id())
     user = Account.query.get(item)
     form = SettingsForm(obj=item)
@@ -89,15 +107,25 @@ def settings():
 @users_app.route('/logout')
 @login_required
 def logout():
+    '''
+	to logout from the dashboard and to be redirect to the login form
+    '''
     logout_user()
     return redirect(url_for('users_app.login'))
 
 
 def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    '''
+    generate a password of 6 characters composed with random numbers and letters (in uppercase) 
+    '''
     return ''.join(random.choice(chars) for _ in range(size))
 
 
 def send_details_account(form, type):
+    '''
+    send the details account of a user to his or her email and according to the function where it was called the content of the email will be changed
+    with a new password
+    '''
     password = password_generator()
     hash_password = generate_password_hash(password)
     if type == 'new_user':
