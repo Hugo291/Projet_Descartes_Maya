@@ -6,6 +6,8 @@ from flask_admin import Admin
 from flask_mail import Mail, Message
 from functools import wraps
 
+from werkzeug.security import generate_password_hash
+
 application = Flask(__name__)
 
 application.config.from_pyfile('config.py')
@@ -20,10 +22,16 @@ mail = Mail(application)
 from app.models.userModels import Account
 import app.models.DataBase
 
-#print('Start drop')
-#db.drop_all()
-#print('Start Create')
-#db.create_all()
+# print('Start drop')
+db.drop_all()
+# print('Start Create')
+db.create_all()
+
+Account(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), isAdmin=1)
+Account(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), isAdmin=1)
+
+db.session.commit()
+
 
 @application.route('/')
 def home_page():
