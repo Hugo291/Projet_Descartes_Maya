@@ -46,7 +46,9 @@ class ScannerThread(Thread):
         """
         :return: the last or current file which has been scanned
         """
-        return self.__list_file[0]
+        if len(self.__list_file) > 0:
+            return self.__list_file[0]
+        return None
 
     def delete_last_file_scaned(self):
         """Thread init
