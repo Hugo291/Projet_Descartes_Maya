@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect, json
+from flask import Blueprint, render_template, request, jsonify, url_for, send_file, redirect
 from flask_login import login_required, current_user
 from sqlalchemy import asc
 
@@ -120,7 +120,7 @@ def download(pdf_id):
     :param pdf_id:
     :return: file of all text of pdf separate by -- num page --
     """
-    from app.models.DataBase import OCRPage, PdfFile
+    from app.models.DataBase import PdfFile
 
     # select the name of pdf
     pdf_file = PdfFile.query.filter_by(id=pdf_id).first()
@@ -307,6 +307,6 @@ def edit(pdf_id):
 
 @scan_app.route('/progress')
 def files_progress():
-    from app.models.DataBase import PdfFile, PDF_WAIT, PDF_IN_PROGRESS
-    files = PdfFile.query.filter((PdfFile.state == PDF_IN_PROGRESS) | (PdfFile.state == PDF_WAIT)).all()
+    from app.models.DataBase import PdfFile
+    files = PdfFile.query.all()
     return jsonify(files=[file.serialize() for file in files])
