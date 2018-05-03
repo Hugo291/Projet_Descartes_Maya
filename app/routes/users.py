@@ -100,7 +100,7 @@ def settings():
                 len(form.pswd.data.strip()) != 0)):
             user_updated.pswd = generate_password_hash(form.pswd.data)
         db.session.commit()
-        return redirect(url_for('account.edit_view'))
+        return redirect(url_for('user.edit_view'))
     return render_template('settings.html', form=form, title='Settings')
 
 
@@ -130,7 +130,7 @@ def send_details_account(form, type):
     hash_password = generate_password_hash(password)
     if type == 'new_user':
         subject = 'Account details for Maya translator website'
-        new_user = User(email=form.email.data, pswd=hash_password, is_admin=form.isAdmin.data)
+        new_user = User(email=form.email.data, pswd=hash_password, is_admin=form.is_admin.data)
         db.session.add(new_user)
     elif type == 'forget_update':
         subject = 'Your new password for your account on Maya translator website'

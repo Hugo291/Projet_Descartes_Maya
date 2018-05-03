@@ -23,9 +23,9 @@ from app.models.userModels import User
 import app.models.DataBase
 
 # print('Start drop')
-db.drop_all()
+#db.drop_all()
 # print('Start Create')
-db.create_all()
+'''db.create_all()
 try:
     User(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), is_admin=1)
     User(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), is_admin=1)
@@ -33,7 +33,7 @@ except Exception as exception:
     print(exception)
 
 db.session.commit()
-
+'''
 
 @application.route('/')
 def home_page():

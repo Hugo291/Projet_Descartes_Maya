@@ -2,7 +2,7 @@
 
 {% set statut = "Translator" %}
 
-{% if current_user.isAdmin == True %}
+{% if current_user.is_admin == True %}
 	{% set statut = "Admin" %}
 {% endif %}
 
@@ -36,7 +36,7 @@
         </li>
 		{% if statut == 'Admin' %}
 			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Users">
-			  <a class="nav-link" href="{{ url_for('account.index_view') }}">
+			  <a class="nav-link" href="{{ url_for('user.index_view') }}">
 				<i class="fa fa-fw fa-users"></i>
 				<span class="nav-link-text">Users</span>
 			  </a>
