@@ -48,9 +48,10 @@ $(document).ready(function() {
 				} else {
 					 $('.state').html(
 				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> '+data.error+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
-                    );
+					 );
 					 //set progress 0
                     setProgress(0);
+                    $("#submit-upload").prop("disabled",false);
 
 				}
 			} ,
@@ -58,7 +59,7 @@ $(document).ready(function() {
 			error : function(data){
 			    setProgress(0);
 			    $('.state').html(
-				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> '+data+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> an error occurred during the upload <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
                         );
 			}
 
