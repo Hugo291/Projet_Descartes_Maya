@@ -1,7 +1,7 @@
 import datetime
 
 from app import db
-from app.models.userModels import Account
+from app.models.userModels import User
 
 """
     This table is for save the name and path of file
@@ -17,13 +17,13 @@ class PdfFile(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     state = db.Column(db.Integer, default=0)
-    pdf_owner = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
+    pdf_owner = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     range_start = db.Column(db.Integer)
     range_end = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
     date_upload = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    owner = db.relationship(Account)
+    owner = db.relationship(User)
     pages = db.relationship('OCRPage', cascade='all , delete')
     logs = db.relationship('LogPdf', cascade='all , delete')
 

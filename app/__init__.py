@@ -19,7 +19,7 @@ login = LoginManager(application)
 login.init_app(application)
 mail = Mail(application)
 
-from app.models.userModels import Account
+from app.models.userModels import User
 import app.models.DataBase
 
 # print('Start drop')
@@ -27,8 +27,8 @@ db.drop_all()
 # print('Start Create')
 db.create_all()
 try:
-    Account(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), isAdmin=1)
-    Account(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), isAdmin=1)
+    User(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), is_admin=1)
+    User(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), is_admin=1)
 except Exception as exception:
     print(exception)
 
@@ -42,7 +42,7 @@ def home_page():
 
 @login.user_loader
 def load_user(user_id):
-    return Account.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
 
 @application.errorhandler(404)

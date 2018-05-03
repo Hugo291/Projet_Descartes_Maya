@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, login_required, logout_user
 from flask_mail import Message
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import db, mail
-from app.models.userModels import LoginForm, Account, ResetPasswordForm, SettingsForm, NewUserForm
+from app.models.userModels import LoginForm, User, ResetPasswordForm, SettingsForm, NewUserForm
 
 
 def admin_required(f):
@@ -15,7 +15,7 @@ def admin_required(f):
     '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if Account.query.get(current_user.get_id()).isAdmin is False:
+        if User.query.get(current_user.get_id()).is_admin is False:
             print('No access')
             return abort(403)
         else:
@@ -37,7 +37,7 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = Account.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             if check_password_hash(user.pswd, form.password.data):
                 login_user(user)
@@ -54,7 +54,7 @@ def forgot_password():
     '''
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        user = Account.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_details_account(form, 'forget_update')
             return render_template('forgot_password.html', email='sended', title='Forgot ?', form=form)
@@ -71,7 +71,7 @@ def home():
     return render_template('menu.html', title='Home')
 
 
-@users_app.route("/admin/account/add_user", methods=['GET', 'POST'])
+@users_app.route("/admin/user/add_user", methods=['GET', 'POST'])
 @login_required
 def add_user():
     '''
@@ -90,11 +90,11 @@ def settings():
     '''
     allows to an user to change his/her own settings
     '''
-    item = Account.query.get(current_user.get_id())
-    user = Account.query.get(item)
+    item = User.query.get(current_user.get_id())
+    user = User.query.get(item)
     form = SettingsForm(obj=item)
     if form.validate_on_submit():
-        user_updated = Account.query.get(current_user.get_id())
+        user_updated = User.query.get(current_user.get_id())
         user_updated.email = form.email.data
         if ((check_password_hash(current_user.pswd, form.pswd.data) == False) and (len(form.pswd.data) != 0) and (
                 len(form.pswd.data.strip()) != 0)):
@@ -130,11 +130,11 @@ def send_details_account(form, type):
     hash_password = generate_password_hash(password)
     if type == 'new_user':
         subject = 'Account details for Maya translator website'
-        new_user = Account(email=form.email.data, pswd=hash_password, isAdmin=form.isAdmin.data)
+        new_user = User(email=form.email.data, pswd=hash_password, is_admin=form.isAdmin.data)
         db.session.add(new_user)
     elif type == 'forget_update':
         subject = 'Your new password for your account on Maya translator website'
-        user = Account.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         user.pswd = hash_password
     db.session.commit()
     msg = Message(subject, sender='gamaliny@gmail.com',

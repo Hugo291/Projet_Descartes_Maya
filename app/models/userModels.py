@@ -6,7 +6,7 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length, Optional
 from app import admin , db
 
-class Account(db.Model, UserMixin):
+class User(db.Model, UserMixin):
     '''
     where db.Model connect to the database throught ORM to create an "Account" class
     which refers to the same name table
@@ -14,7 +14,7 @@ class Account(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(60), unique=True)
     pswd = db.Column(db.String(256))
-    isAdmin = db.Column(db.Boolean)
+    is_admin = db.Column(db.Boolean)
 
 
 class AccountForm(ModelView):
@@ -32,13 +32,13 @@ class AccountSettings(ModelView):
     list_template = 'admin/list.html'
     edit_template = 'edit_user.html'
     column_exclude_list = ['pswd']
-    form_columns = ['email', 'isAdmin']
+    form_columns = ['email', 'is_admin']
 
 def is_accessible(self):
 
 	if not current_user.is_active or not current_user.is_authenticated:
 		return False
-	if Account.query.get(current_user.get_id()).isAdmin is True:
+	if Account.query.get(current_user.get_id()).is_admin is True:
 		return True
 	return False
 
@@ -64,7 +64,7 @@ class NewUserForm(FlaskForm):
     is used to create a new user
     '''
     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    isAdmin = BooleanField('Administrator')
+    is_admin = BooleanField('Administrator')
 
 
 class ResetPasswordForm(FlaskForm):
@@ -73,4 +73,4 @@ class ResetPasswordForm(FlaskForm):
     '''
     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
 
-admin.add_view(AccountSettings(Account, db.session))
+admin.add_view(AccountSettings(User, db.session))
