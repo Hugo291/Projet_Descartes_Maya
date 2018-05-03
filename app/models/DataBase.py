@@ -12,12 +12,13 @@ PDF_SUCCESS = 2
 PDF_IN_PROGRESS = 1
 PDF_WAIT = 0
 
+
 class PdfFile(db.Model):
     __tablename__ = 'pdf_file'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     state = db.Column(db.Integer, default=0)
-    pdf_owner = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    pdf_owner = db.Column(db.Integer, db.ForeignKey(User.id, ondelete='SET NULL'), nullable=True)
     range_start = db.Column(db.Integer)
     range_end = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
