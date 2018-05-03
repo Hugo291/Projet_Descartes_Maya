@@ -1,0 +1,45 @@
+<div class="container">
+        <main>  
+			<div id="lesboutons">
+				<button id="button1" class="btn button_selected">
+				  Wixarika <span class="glyphicon glyphicon-menu-right" aria-hidden="true"> to </span> Spanish
+				</button>
+				<button id="button2" class="btn  button">
+					Spanish <span class="glyphicon glyphicon-menu-right" aria-hidden="true"> to </span> Wixarika
+				</button>
+			  
+			
+			</div>
+            
+        						<form id="texta" action="index.php#traductor" method="post"></form>
+
+			<div class="row">
+				<div class="col-md-6">
+					<!--Material textarea-->
+					<div class="md-form">
+						<textarea type="text" form="texta" name="textarea1" id="form7" class="md-textarea form-control" rows="7"></textarea>
+						
+					</div>
+				</div>
+				<div class="col-md-6">
+					<!--Textarea with icon prefix-->
+					<div class="md-form">
+						<textarea type="text" form="texta" name="textarea2" id="form10" class="md-textarea form-control" rows="7" disabled=""></textarea>
+					</div>
+                </div>
+			</div>
+			<div class="row">
+			<div class="col-md-6">
+            <button id="translate" type="button" class="btn btn-primary">Translate</button>
+			</div>
+			<div class="col-md-6">
+			<button id="corriger" type="button" class="btn btn-warning">Correct</button>
+            <button id="valbtn" type="button" class="btn btn-default" onclick="document.getElementById('texta').submit();" disabled="">Validate the correction</button>            
+			</div>
+			</div>
+ 				<input type="text" name="langue" id="langue" value="wixspa" form="texta" style="visibility:hidden;">
+
+      </main>
+        </div>
+		
+		
