@@ -1,0 +1,111 @@
+{% extends 'menu.html' %}
+
+{% block headpage %}
+    <link href="{{ url_for('static', filename='css/jquery.highlight-within-textarea.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery.highlight-within-textarea.js') }}"></script>
+
+
+    <style>
+			.hwt-container {
+                width: 100%;
+				background-color: #f8f9fa;
+			}
+
+			.hwt-content {
+                width: 100%;
+                display: block;
+                height:400px ;
+				padding: 20px;
+				border: 1px solid #adb5bd;
+				color: inherit;
+				font: 18px/25px 'Droid Sans Mono', sans-serif;
+			}
+
+			.hwt-input:focus {
+				outline-color: #495057;
+			}
+
+			.hwt-content mark {
+				border-radius: 3px;
+				background-color: #d0bfff;
+			}
+
+			.hwt-content mark.red {
+				background-color: #ffc9c9;
+			}
+
+			.hwt-content mark.blue {
+				background-color: #a3daff;
+			}
+
+			.hwt-content mark.yellow {
+				background-color: #ffec99;
+			}
+		</style>
+
+{% endblock %}
+{% block content %}
+
+        <section>
+            <div class="row" >
+                <div class="col-2">
+                        <div class="form-group">
+                          <label for="sel1">Select Language:</label>
+                          <select class="form-control" id="sel1">
+                            <option>Language1</option>
+                            <option>Language2</option>
+                            <option>Language3</option>
+                            <option>Language4</option>
+                          </select>
+                        </div>
+                        <div style="min-height: 400px;" readonly class="form-control"></div>
+
+                </div>
+
+                <div class="col-1" style="margin-top: 250px;">
+                    <button><i class="fa fa-arrow-circle-left"></i></button>
+                </div>
+
+                <div class="col">
+
+                        <h4 class="mt-3 mb-3">Text : </h4>
+			            <textarea class="selection form-control">Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.Potato potato tomato potato.</textarea>
+
+                </div>
+
+                <div class="col-1" style="margin-top: 250px;">
+                    <button><i class="fa fa-arrow-circle-right"></i></button>
+                </div>
+
+                <div class="col-2">
+                        <div class="form-group">
+                          <label for="sel1">Select Language:</label>
+                          <select class="form-control" id="sel1">
+                            <option>Language1</option>
+                            <option>Language2</option>
+                            <option>Language3</option>
+                            <option>Language4</option>
+                          </select>
+                        </div>
+
+
+                        <div style="min-height: 400px;" readonly class="form-control">
+
+                        </div>
+
+                </div>
+            </div>
+
+
+            <script>
+                $(function () {
+                     $('.selection').highlightWithinTextarea({
+                        highlight: [2, 500]
+                    });
+                });
+
+			</script>
+
+		</section>
+
+{% endblock %}

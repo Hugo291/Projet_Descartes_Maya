@@ -22,12 +22,13 @@
                             <th scope="col">Open</th>
                             <th scope="col">Download</th>
                             <th scope="col">Delete</th>
+                            <th scope="col">Langue</th>
                             <th scope="col">Detail</th>
 
                         </tr>
                     </thead>
 
-                    <tbody>
+
 
                     {% for file in files %}
 
@@ -41,9 +42,9 @@
                                 <td><a href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="ml-2 fa fa-folder-open"></i></a></td>
                                 <td><a href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class="ml-4 fa fa-download"></i></a></td>
                                 <td><a href="{{ url_for('scan_app.delete_file', pdf_id= file.id ) }}"><i class="ml-3 fa fa-times-circle"></i></a></td>
-
+                                <td><a href="{{ url_for('scan_app.selection_langue', pdf_id= file.id ) }}"><i class="fa fa-apple"></i></a></td>
                             {% else %}
-                                <td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td>
                             {% endif %}
                             <td><a href="{{ url_for('scan_app.details', pdf_id= file.id ) }}"><i class="ml-3 fa fa-info-circle"></i></a></td>
                         </tr>
