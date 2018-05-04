@@ -9,7 +9,8 @@ from app.config import TMP_DIR, UPLOAD_DIR_PDF
 
 
 class ScanDocumentForm(FlaskForm):
-    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'),                                                  FileAllowed(['pdf'], 'Pdf only!!')])
+    filePdf = FileField(label="File", validators=[FileRequired(message='A pdf file is required !'),
+                                                  FileAllowed(['pdf'], 'Pdf only!!')])
     file_range_start = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="Start")
     file_range_end = IntegerField(validators=[validators.NumberRange(min=0, max=500)], label="End")
 
@@ -85,3 +86,24 @@ class ScanDocumentForm(FlaskForm):
 
 class EditNameFileForm(FlaskForm):
     filename = StringField(validators=[InputRequired(), Length(min=2, max=200)], label="Filename")
+
+
+class CreateWordForm(FlaskForm):
+    lang1 = IntegerField()
+    lang2 = IntegerField()
+    text_word_1 = StringField(validators=[InputRequired()])
+    text_word_2 = StringField(validators=[InputRequired()])
+
+    def validate_on_submit(self):
+        """
+
+        :return: bool
+        """
+        if not super().validate_on_submit():
+            return False
+
+        # todo verifier le pdf exist
+
+        # todo verifier lang int
+
+        # todo text

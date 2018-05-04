@@ -81,7 +81,7 @@ class ScannerThread(Thread):
             # set state In progress
             pdf_file_db.state = 1
 
-            range_start, range_end = pdf_file_db.get_range
+            range_start, range_end = pdf_file_db.get_range()
 
             for index in range(range_start, range_end):
 
@@ -124,7 +124,7 @@ class ScannerThread(Thread):
 
                 print("Page num °" + str(index) + " finished ")
 
-                self.set_percent(int(cal(current=index, total=range_end - range_start)))
+                self.set_percent(int(cal(current=index - range_start, total=range_end - range_start)))
 
             # set staus finish
 
@@ -156,7 +156,6 @@ class ScannerThread(Thread):
 
     def log(self, message, type=0):
         LogPdf(pdf_file_id=self.get_last_file_scaned(), message=message, type=type)
-
 
     def get_file_progress(self, pdf_id):
         if pdf_id is self.get_last_file_scaned():

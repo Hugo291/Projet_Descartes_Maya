@@ -310,3 +310,19 @@ def files_progress():
     from app.models.DataBase import PdfFile
     files = PdfFile.query.all()
     return jsonify(files=[file.serialize() for file in files])
+
+
+@scan_app.route('/selection_langue/<int:pdf_id>')
+def selection_langue(pdf_id):
+    from app.models.DataBase import PdfFile, OCRPage
+    pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
+    return render_template('selectionLangue.html', pages=pages, pdf_id=pdf_id, title='Selection')
+
+
+@scan_app.route('/word', methods=['POST'])
+def word(pdf_id=0):
+    
+    dict = request.form
+    for key in dict:
+        print('form ' + key + ' : ' + dict[key])
+    return " -*- "
