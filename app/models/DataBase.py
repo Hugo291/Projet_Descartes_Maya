@@ -42,7 +42,6 @@ class PdfFile(db.Model):
         var = False if self.range_end is None and self.range_start is None else True
         return var
 
-    @property
     def get_range(self):
         if self.range_start is None and self.range_end is None:
             return 0, self.num_page
@@ -148,3 +147,37 @@ class OcrBoxWord(db.Model):
 
     def __str__(self):
         return '__str__'
+
+
+class Langue(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    language = db.Column(db.String(100), nullable=False)
+
+    def __int__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return 'Langue : ' + str(self.name)
+
+
+class Word(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    writer = db.Column(db.Integer, db.ForeignKey(User.id, ondelete='SET NULL'), nullable=True)
+    word = db.Column(db.String(100), nullable=False)
+
+    def __init__(self, writer, word):
+        self.word = word
+        self.writer = writer
+
+
+class SelectWordPos(db.Model):
+    __tablename__ = 'select_word_pos'
+    id = db.Column(db.Integer, primary_key=True)
+    pos_start = db.Column(db.Integer, nullable=True)
+    pos_end = db.Column(db.Integer, nullable=True)
+    word = db.Column(db.Integer, db.ForeignKey(Word.id, ondelete='SET NULL'), nullable=True)
+
+    def __init__(self, pos_start, pos_end, word):
+        self.pos_end = pos_end
+        self.pos_start = pos_start
+        self.word = word
