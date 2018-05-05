@@ -109,7 +109,6 @@ class OcrBoxWord(db.Model):
     position_top = db.Column(db.Integer)
     position_left = db.Column(db.Integer)
     text = db.Column(db.Text)
-    text_corrector = db.Column(db.Text)
 
     def __init__(self,
                  id=None,
@@ -149,7 +148,7 @@ class OcrBoxWord(db.Model):
         return '__str__'
 
 
-class Langue(db.Model):
+class Language(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     language = db.Column(db.String(100), nullable=False)
 
@@ -164,6 +163,7 @@ class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     writer = db.Column(db.Integer, db.ForeignKey(User.id, ondelete='SET NULL'), nullable=True)
     word = db.Column(db.String(100), nullable=False)
+    lang = db.Column(db.Integer, db.ForeignKey(Language.id, ondelete='SET NULL'), nullable=True)
 
     def __init__(self, writer, word):
         self.word = word

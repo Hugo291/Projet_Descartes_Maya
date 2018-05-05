@@ -22,18 +22,11 @@ mail = Mail(application)
 from app.models.userModels import User
 import app.models.DataBase
 
+
 # print('Start drop')
 #db.drop_all()
 # print('Start Create')
-'''db.create_all()
-try:
-    User(email='hugo.ferreira29@live.fr', pswd=generate_password_hash('123'), is_admin=1)
-    User(email='gamaliny@gmail.com', pswd=generate_password_hash('123'), is_admin=1)
-except Exception as exception:
-    print(exception)
-
-db.session.commit()
-'''
+db.create_all()
 
 @application.route('/')
 def home_page():
@@ -60,7 +53,6 @@ application.register_blueprint(scan_app)
 
 from app.template_filter.ValueStatus import value_status_file
 
-print("Start")
 
 if __name__ == "__main__":
     application.run()

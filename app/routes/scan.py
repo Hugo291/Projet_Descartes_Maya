@@ -29,11 +29,10 @@ def reset_all_file_unfinish():
     files = PdfFile.query.filter((PdfFile.state == 0) | (PdfFile.state == 1)).all()
 
     # error = -1
-    for file in files:
-        LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
-        file.state = -1
-
-    db.session.commit()
+    #for file in files:
+        #LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
+        #file.state = -1
+    #db.session.commit()
 
 
 reset_all_file_unfinish()

@@ -154,14 +154,15 @@ $(function () {
         var textLangue2 = $('#textarea_lang_2').html();
         var ValueLangue1 = $( "#lang-select-1" ).val();
         var ValueLangue2 = $('#lang-select-2').val();
+        
         $.ajax({
             url: "/scan/word",
             type: "POST",
             data: {
-                'text_lang_1':textLangue1,
-                'value_lang_1':ValueLangue1,
-                'text_lang_2':textLangue2 ,
-                'value_lang_2':ValueLangue2
+                'text_word_1':textLangue1,
+                'lang1':ValueLangue1,
+                'text_word_2':textLangue2 ,
+                'lang2':ValueLangue2
             },
             success : function (data) {
                 alert(data);

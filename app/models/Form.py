@@ -89,8 +89,8 @@ class EditNameFileForm(FlaskForm):
 
 
 class CreateWordForm(FlaskForm):
-    lang1 = IntegerField()
-    lang2 = IntegerField()
+    lang1 = IntegerField(validators=[InputRequired()])
+    lang2 = IntegerField(validators=[InputRequired()])
     text_word_1 = StringField(validators=[InputRequired()])
     text_word_2 = StringField(validators=[InputRequired()])
 
