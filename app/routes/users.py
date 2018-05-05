@@ -68,7 +68,7 @@ def home():
     '''
     show a homepage for the dashboard
     '''
-    return render_template('menu.html', title='Home')
+    return render_template('dashboard_home.html', title='Home')
 
 
 @users_app.route("/admin/user/add_user", methods=['GET', 'POST'])
