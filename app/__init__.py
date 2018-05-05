@@ -24,9 +24,9 @@ import app.models.DataBase
 
 
 # print('Start drop')
-#db.drop_all()
+# db.drop_all()
 # print('Start Create')
-db.create_all()
+# db.create_all()
 
 @application.route('/')
 def home_page():

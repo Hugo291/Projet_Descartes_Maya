@@ -39,15 +39,15 @@
                             <td>{{ (file.state | value_state_file )|safe }}</td>
 
                             {% if file.state == 2 or file.state == -1%}
-                                <td><a href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="ml-2 fa fa-folder-open"></i></a></td>
-                                <td><a href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class="ml-4 fa fa-download"></i></a></td>
-                                <td><a href="{{ url_for('scan_app.selection_langue', pdf_id= file.id ) }}"><i class="fa fa-apple"></i></a></td>
+                                <td><a class="text-center d-block" href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="fa fa-folder-open"></i></a></td>
+                                <td><a class="text-center d-block" href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class=" fa fa-download"></i></a></td>
+                                <td><a class="text-center d-block" href="{{ url_for('scan_app.selection_langue', pdf_id= file.id ) }}"><i class="fa fa-apple"></i></a></td>
 
                             {% else %}
                                 <td></td><td></td><td></td>
                             {% endif %}
-                            <td><a href="{{ url_for('scan_app.delete_file', pdf_id= file.id ) }}"><i class="ml-3 fa fa-times-circle"></i></a></td>
-                            <td><a href="{{ url_for('scan_app.details', pdf_id= file.id ) }}"><i class="ml-3 fa fa-info-circle"></i></a></td>
+                            <td><a class="text-center d-block" href="{{ url_for('scan_app.delete_file', pdf_id= file.id ) }}"><i class="fa fa-times-circle"></i></a></td>
+                            <td><a class="text-center d-block" href="{{ url_for('scan_app.details', pdf_id= file.id ) }}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
 
                     {% endfor %}

@@ -116,7 +116,7 @@ class ScannerThread(Thread):
                 for box in box_word:
                     box_word = OcrBoxWord(pdf_page_id=id_pdf_page, box=box)
                     db.session.add(box_word)
-
+                    db.session.commit()
                 # commit all word box in folder
                 db.session.commit()
 

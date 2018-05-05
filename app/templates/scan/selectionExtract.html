@@ -1,8 +1,7 @@
 {% extends 'menu.html' %}
 
 {% block headpage %}
-         <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
-
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
      <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
      <script src="{{ url_for('static', filename='js/correction.js') }}"></script>
      <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}"/>
@@ -24,7 +23,7 @@
 
             <ul class="list-group scroll-list-image " style="height: 770px;">
 
-                {% for  page in pages %}
+                {% for  page in pdf.pages %}
 
                     {% if loop.index == 0 %}
                         {% set first_page_num = page.num_page %}

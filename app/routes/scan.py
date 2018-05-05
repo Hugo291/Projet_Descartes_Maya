@@ -99,12 +99,11 @@ def upload():
 @login_required
 @admin_required
 def selection_extract(pdf_id):
-    from app.models.DataBase import OCRPage
+    from app.models.DataBase import OCRPage , PdfFile
     try:
         # select all pages of pdf
-        pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
-
-        return render_template('selectionExtract.html', pages=pages, pdf_id=pdf_id, title='Selection')
+        pdf = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
+        return render_template('selectionExtract.html', pdf=pdf, pdf_id=pdf_id, title='Selection')
     except Exception as E:
         return "File Scan.py function : selection_extract -> " + str(E)
 
@@ -313,9 +312,10 @@ def files_progress():
 
 @scan_app.route('/selection_langue/<int:pdf_id>')
 def selection_langue(pdf_id):
-    from app.models.DataBase import PdfFile, OCRPage
+    from app.models.DataBase import PdfFile, OCRPage , Language
+    langs = Language.query.all()
     pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
-    return render_template('selectionLangue.html', pages=pages, pdf_id=pdf_id, title='Selection')
+    return render_template('selectionLangue.html', pages=pages, pdf_id=pdf_id, lang_select_list= langs, title='Selection Langue' )
 
 
 @scan_app.route('/word', methods=['POST'])
