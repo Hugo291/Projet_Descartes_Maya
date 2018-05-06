@@ -41,7 +41,7 @@
                             {% if file.state == 2 or file.state == -1%}
                                 <td><a class="text-center d-block" href="{{ url_for('scan_app.selection_extract', pdf_id= file.id ) }}"><i class="fa fa-folder-open"></i></a></td>
                                 <td><a class="text-center d-block" href="{{ url_for('scan_app.download', pdf_id= file.id ) }}"><i class=" fa fa-download"></i></a></td>
-                                <td><a class="text-center d-block" href="{{ url_for('scan_app.selection_langue', pdf_id= file.id ) }}"><i class="fa fa-apple"></i></a></td>
+                                <td><a class="text-center d-block" href="{{ url_for('scan_app.selection_language', pdf_id= file.id ) }}"><i class="fa fa-language"></i></a></td>
 
                             {% else %}
                                 <td></td><td></td><td></td>

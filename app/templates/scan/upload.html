@@ -4,6 +4,7 @@
     <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap-fileselect.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/file-input.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 
 {% endblock %}
 
@@ -33,7 +34,7 @@
 
 
             <form method="POST" enctype="multipart/form-data" action="{{ url_for('scan_app.upload') }}">
-                <div class="form-group">
+                <div class="form-group" id="input-file-upload">
                     {{ form.filePdf.label }}{{ form.filePdf(id='input-file',accept='.pdf') }}
                 </div>
                 <div class="form-group">

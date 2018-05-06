@@ -17,9 +17,7 @@
 }
 
 
-
-selection hig
-
+/*Selection*/
 .hwt-container {
     width: 100%;
     background-color: #f8f9fa;
@@ -54,4 +52,8 @@ selection hig
 
 .hwt-content mark.yellow {
     background-color: #ffec99;
+}
+
+#input-file-upload .btn {
+    margin-left: 3px;
 }

@@ -23,7 +23,16 @@ $(function () {
                         if (parseInt(data.files[i].id) === parseInt(html_id)) {
 
                             //set ajax html in line's
-                            $(this).find('td').eq(2).html(data.files[i].html);
+                            $(this).find('td').eq(2).html(data.files[i].html_status);
+                            if (data.files[i].state === 2 || data.files[i].state === -1){
+                                console.log(data.files[i].state);
+                                var start = '<a class="text-center d-block" href="/scan/';
+
+                                $(this).find('td').eq(3).html(start+'selectionExtract/'+data.files[i].id+'"><i class="fa fa-folder-open"></i></a>');
+                                $(this).find('td').eq(4).html(start+'download/'+data.files[i].id+'"><i class="fa fa-download"></i></a>');
+                                $(this).find('td').eq(5).html(start+'selection_langue/'+data.files[i].id+'"><i class="fa fa-language"></i></a>');
+                            }
+
                         }
                     });
 

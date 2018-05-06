@@ -9,6 +9,12 @@ from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG, UPLOAD_DIR_TXT
 from app.models.ScannerThread import ScannerThread
 from app.routes.users import admin_required
 
+from app.models.DataBase import OCRPage, PdfFile, Language, db, OcrBoxWord, LogPdf
+from app.models.Form import EditNameFileForm, ScanDocumentForm
+from shutil import rmtree
+
+from sqlalchemy import desc
+
 scan_app = Blueprint('scan_app', __name__, template_folder='../templates/scan', url_prefix='/scan')
 
 threadScan = ScannerThread()
@@ -23,16 +29,15 @@ def reset_all_file_unfinish():
     """
     Reset all record that not finish (put them in error)
     """
-    from app.models.DataBase import PdfFile, db, LogPdf
 
     # select all file not finish or in progress
     files = PdfFile.query.filter((PdfFile.state == 0) | (PdfFile.state == 1)).all()
 
     # error = -1
-    #for file in files:
-        #LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
-        #file.state = -1
-    #db.session.commit()
+    # for file in files:
+    # LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
+    # file.state = -1
+    # db.session.commit()
 
 
 reset_all_file_unfinish()
@@ -47,7 +52,6 @@ def show():
     Page for uplaod file
     :return: upload.html
     """
-    from app.models.Form import ScanDocumentForm
     form = ScanDocumentForm()
     return render_template('upload.html', form=form, title='Uplaod')
 
@@ -61,13 +65,9 @@ def upload():
     :return: files.html
     """
 
-    from app.models.Form import ScanDocumentForm
-
     form = ScanDocumentForm()
 
     if form.validate_on_submit():
-
-        from app.models.DataBase import PdfFile, db
 
         file = form.filePdf.data
         pdf = PdfFile(name=file.filename, num_page=form.num_page, pdf_owner=current_user.get_id())
@@ -99,16 +99,13 @@ def upload():
 @login_required
 @admin_required
 def selection_extract(pdf_id):
-    from app.models.DataBase import OCRPage , PdfFile
-    try:
-        # select all pages of pdf
-        pdf = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
-        return render_template('selectionExtract.html', pdf=pdf, pdf_id=pdf_id, title='Selection')
-    except Exception as E:
-        return "File Scan.py function : selection_extract -> " + str(E)
+    # select all pages of pdf
+    pdf = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
+    langs = Language.get_indigenous_language()
+    return render_template('selectionExtract.html', pdf=pdf, pdf_id=pdf_id, langs=langs, title='Selection')
 
 
-@scan_app.route('/downlaod/<int:pdf_id>')
+@scan_app.route('/download/<int:pdf_id>')
 @login_required
 @admin_required
 def download(pdf_id):
@@ -118,10 +115,9 @@ def download(pdf_id):
     :param pdf_id:
     :return: file of all text of pdf separate by -- num page --
     """
-    from app.models.DataBase import PdfFile
 
     # select the name of pdf
-    pdf_file = PdfFile.query.filter_by(id=pdf_id).first()
+    pdf_file = PdfFile.query.filter_by(id=pdf_id).first_or_404()
     filename = pdf_file.name
 
     # create file path
@@ -158,11 +154,8 @@ def files():
     This page list all file in bdd
     :return: files.html
     """
-    from app.models.DataBase import PdfFile
-
     # select all files
-    files = PdfFile.query.order_by(asc(PdfFile.state)).order_by(asc(PdfFile.name)).all()
-
+    files = PdfFile.query.order_by(asc(PdfFile.state)).order_by(desc(PdfFile.date_upload)).all()
     return render_template('files.html', files=files, title='List files')
 
 
@@ -171,7 +164,7 @@ def files():
 @admin_required
 def get_images(pdf_id, page_number):
     """
-
+    Get pages in format jpg
     :param pdf_id: the id of pdf
     :param page_number: page number
     :return: the image of page of pdf
@@ -194,10 +187,10 @@ def get_boxs(pdf_id, page_number):
     :param page_number:
     :return: json list box of all word in page and text of page
     """
-    from app.models.DataBase import OcrBoxWord, OCRPage
 
     # get all box of page
-    page = OCRPage.query.filter_by(pdf_file_id=pdf_id, num_page=page_number).first()
+
+    page = OCRPage.query.filter_by(pdf_file_id=pdf_id, num_page=page_number).first_or_404()
 
     boxs = OcrBoxWord.query.filter_by(pdf_page_id=page.id).all()
 
@@ -218,22 +211,19 @@ def delete_file(pdf_id):
     """
     try:
 
-        from app.models.DataBase import PdfFile, db
         PdfFile.query.filter_by(id=pdf_id).delete()
 
         try:
             # remove pdf
             os.remove(os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf'))
-        except Exception as exception:
-            print('Error during delete of pdf. ' + str(exception))
+        except:
+            pass
 
         try:
             # remove folder
-            from shutil import rmtree
             rmtree(os.path.join(UPLOAD_DIR_JPG, str(pdf_id)))
-        except Exception as exception:
-            print('Error during delete folder jpg. ' + str(exception))
-
+        except:
+            pass
         db.session.commit()
         return redirect(url_for('scan_app.files'))
 
@@ -252,8 +242,7 @@ def correction(pdf_id, num_page):
     :param num_page: the page of pdf
     :return: success or error
     """
-    from app.models.DataBase import OCRPage, db
-    ocr_page = OCRPage.query.filter_by(pdf_file_id=pdf_id, num_page=num_page).first()
+    ocr_page = OCRPage.query.filter_by(pdf_file_id=pdf_id, num_page=num_page).first_or_404()
     ocr_page.text_corrector = request.form['text']
     db.session.commit()
     return 'success'
@@ -263,10 +252,7 @@ def correction(pdf_id, num_page):
 @login_required
 @admin_required
 def details(pdf_id):
-    from app.models.DataBase import PdfFile, LogPdf
-    from sqlalchemy import desc
-
-    pdf_file = PdfFile.query.filter_by(id=pdf_id).first()
+    pdf_file = PdfFile.query.filter_by(id=pdf_id).first_or_404()
     last_logs = LogPdf.query.filter_by(pdf_file_id=pdf_file.id).order_by(desc(LogPdf.id)).limit(5)
 
     return render_template('details.html', pdf_file=pdf_file, last_logs=last_logs)
@@ -284,10 +270,7 @@ def pdf(pdf_id):
 @login_required
 @admin_required
 def edit(pdf_id):
-    from app.models.Form import EditNameFileForm
-    from app.models.DataBase import PdfFile, db
-
-    pdf = PdfFile.query.filter_by(id=int(pdf_id)).first()
+    pdf = PdfFile.query.filter_by(id=int(pdf_id)).first_or_404()
     form = EditNameFileForm()
 
     if request.method == 'POST':
@@ -304,23 +287,28 @@ def edit(pdf_id):
 
 
 @scan_app.route('/progress')
+@login_required
+@admin_required
 def files_progress():
-    from app.models.DataBase import PdfFile
     files = PdfFile.query.all()
     return jsonify(files=[file.serialize() for file in files])
 
 
 @scan_app.route('/selection_langue/<int:pdf_id>')
-def selection_langue(pdf_id):
-    from app.models.DataBase import PdfFile, OCRPage , Language
+@login_required
+@admin_required
+def selection_language(pdf_id):
     langs = Language.query.all()
     pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
-    return render_template('selectionLangue.html', pages=pages, pdf_id=pdf_id, lang_select_list= langs, title='Selection Langue' )
+    return render_template('selectionLangue.html', pages=pages, pdf_id=pdf_id, lang_select_list=langs,
+                           title='Selection Langue')
 
 
 @scan_app.route('/word', methods=['POST'])
-def word(pdf_id=0):
-    
+@login_required
+@admin_required
+def word(pdf_id):
+    pdf = PdfFile.query.filter(PdfFile.id == pdf_id).first_or_404()
     dict = request.form
     for key in dict:
         print('form ' + key + ' : ' + dict[key])

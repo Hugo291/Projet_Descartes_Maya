@@ -1,5 +1,7 @@
 import datetime
 
+from flask import url_for
+
 from app import db
 from app.models.userModels import User
 
@@ -13,20 +15,37 @@ PDF_IN_PROGRESS = 1
 PDF_WAIT = 0
 
 
+class Language(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    language = db.Column(db.String(100), nullable=False)
+
+    def __int__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return 'Langue : ' + str(self.name)
+
+    @staticmethod
+    def get_indigenous_language():
+        return Language.query.filter((Language.id != 1)).all()
+
+
 class PdfFile(db.Model):
     __tablename__ = 'pdf_file'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     state = db.Column(db.Integer, default=0)
     pdf_owner = db.Column(db.Integer, db.ForeignKey(User.id, ondelete='SET NULL'), nullable=True)
+    pdf_lang = db.Column(db.Integer, db.ForeignKey(Language.id, ondelete='CASCADE'), nullable=True)
     range_start = db.Column(db.Integer)
     range_end = db.Column(db.Integer)
     num_page = db.Column(db.Integer)
     date_upload = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    owner = db.relationship(User)
-    pages = db.relationship('OCRPage', cascade='all , delete')
-    logs = db.relationship('LogPdf', cascade='all , delete')
+    owner = db.relationship('User')
+    pages = db.relationship('OCRPage')
+    logs = db.relationship('LogPdf')
+    lang = db.relationship('Language')
 
     def __init__(self, id=None, name=None, num_page=None, pdf_owner=None):
         self.id = id
@@ -55,13 +74,8 @@ class PdfFile(db.Model):
             'id': self.id,
             'progress': threadScan.get_file_progress(pdf_id=self.id),
             'state': self.state,
-            'html': value_status_file(self.state)
+            'html_status': value_status_file(self.state)
         }
-
-
-"""
-    This table save all text scaned by OCR
-"""
 
 
 class LogPdf(db.Model):
@@ -93,11 +107,6 @@ class OCRPage(db.Model):
         self.pdf_file_id = pdf_file_id
         self.num_page = num_page
         self.text = text
-
-
-"""
-    This table save all Box's position of word in document  
-"""
 
 
 class OcrBoxWord(db.Model):
@@ -148,22 +157,12 @@ class OcrBoxWord(db.Model):
         return '__str__'
 
 
-class Language(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    language = db.Column(db.String(100), nullable=False)
-
-    def __int__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return 'Langue : ' + str(self.name)
-
-
 class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     writer = db.Column(db.Integer, db.ForeignKey(User.id, ondelete='SET NULL'), nullable=True)
-    word = db.Column(db.String(100), nullable=False)
-    lang = db.Column(db.Integer, db.ForeignKey(Language.id, ondelete='SET NULL'), nullable=True)
+    word_es = db.Column(db.String(200), nullable=False)
+    word_ot = db.Column(db.String(200), nullable=False)
+    lang = db.Column(db.Integer, db.ForeignKey(Language.id, ondelete='CASCADE'), nullable=True)
 
     def __init__(self, writer, word):
         self.word = word

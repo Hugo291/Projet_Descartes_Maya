@@ -5,7 +5,7 @@ from threading import Thread
 from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG
 from app.models.OCR import OCR
 from app.models.Pdf import convert_to_jpg, page_number
-from app.models.DataBase import LogPdf
+from app.models.DataBase import LogPdf, PDF_IN_PROGRESS, PDF_WAIT, PDF_ERROR, PDF_SUCCESS
 
 cal = lambda current, total: int((current + 1) * 100 / total)
 
@@ -19,6 +19,9 @@ class ScannerThread(Thread):
         super().__init__()
         self.__list_file = []
         self.__percent = 0
+
+    def start(self):
+        super().start()
 
     def run(self):
         """
@@ -78,8 +81,11 @@ class ScannerThread(Thread):
 
         try:
 
+            if pdf_file_db is None:
+                raise Exception('In start Analyse the file not found')
+
             # set state In progress
-            pdf_file_db.state = 1
+            pdf_file_db.state = PDF_IN_PROGRESS
 
             range_start, range_end = pdf_file_db.get_range()
 
@@ -128,7 +134,7 @@ class ScannerThread(Thread):
 
             # set staus finish
 
-            pdf_file_db.state = 2
+            pdf_file_db.state = PDF_SUCCESS
             db.session.commit()
 
             self.log('File analysed with success', type=1)
@@ -136,11 +142,13 @@ class ScannerThread(Thread):
             print("The file is finish")
 
         except Exception as error:
-            print("function : convert_scan_file -> " + str(error))
-            pdf_file_db.state = -1
-            db.session.commit()
-            self.log('An exception raised during the process -> ' + str(error), type=-1)
-
+            try:
+                print("function : convert_scan_file -> " + str(error))
+                pdf_file_db.state = PDF_ERROR
+                db.session.commit()
+                self.log('An exception raised during the process -> ' + str(error), type=-1)
+            except:
+                pass
     def __str__(self):
         return str(self.get_percent)
 
