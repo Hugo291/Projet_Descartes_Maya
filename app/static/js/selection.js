@@ -133,7 +133,7 @@ $(function () {
 
     var current_value_selected = "";
 
-    $('textarea').keyup(update).mousedown(update).mousemove(update).mouseup(update);
+    $('textarea:first').keyup(update).mousedown(update).mousemove(update).mouseup(update);
 
     function update(e) {
         var range = $(this).getSelection();
@@ -153,20 +153,30 @@ $(function () {
 
         var textLangue1 = $('#textarea_lang_1').html();
         var textLangue2 = $('#textarea_lang_2').html();
-        var ValueLangue1 = $( "#lang-select-1" ).val();
-        var ValueLangue2 = $('#lang-select-2').val();
-        
+        var ValueLanguage1 = $( "#lang-select-1" ).val();
+        var ValueLanguage2 = $('#lang-select-2').val();
+
+
         $.ajax({
-            url: "/scan/word",
+            url: "/scan/add_word",
             type: "POST",
             data: {
                 'text_word_1':textLangue1,
-                'lang1':ValueLangue1,
+                'lang_1':ValueLanguage1,
                 'text_word_2':textLangue2 ,
-                'lang2':ValueLangue2
+                'lang_2':ValueLanguage2
             },
             success : function (data) {
-                alert(data);
+                if(data.success){
+                    alert(data.success);
+                    $('#textarea_lang_2').empty();
+                    $('#textarea_lang_1').empty();
+
+                }else{
+
+                }
+            },error : function (data) {
+                alert('error');
             }
         });
     });

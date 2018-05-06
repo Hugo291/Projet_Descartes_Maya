@@ -21,7 +21,7 @@ $(function () {
                 //the text of textarea send
                 'text':$('#textarea-text-page').val()
             },
-            success: function(results){
+            success: function(data){
 
                 $('.state').html(
 				        '<div class="alert alert-success alert-dismissible" role="alert"> ' +

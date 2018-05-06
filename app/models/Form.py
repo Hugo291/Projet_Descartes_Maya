@@ -88,9 +88,11 @@ class EditNameFileForm(FlaskForm):
     filename = StringField(validators=[InputRequired(), Length(min=2, max=200)], label="Filename")
 
 
+
+
 class CreateWordForm(FlaskForm):
-    lang1 = IntegerField(validators=[InputRequired()])
-    lang2 = IntegerField(validators=[InputRequired()])
+    lang_1 = SelectField(validators=[InputRequired()], choices=Language.get_all_language(), coerce=int, label='Select Language :')
+    lang_2 = SelectField(validators=[InputRequired()], choices=Language.get_all_language(), coerce=int, label='Select Language :')
     text_word_1 = StringField(validators=[InputRequired()])
     text_word_2 = StringField(validators=[InputRequired()])
 
@@ -102,19 +104,14 @@ class CreateWordForm(FlaskForm):
         if not super().validate_on_submit():
             return False
 
-        # todo verifier le pdf exist
-
         # todo verifier lang int
 
         # todo text
-
-
-def get_lang():
-    return [(0, 'Not defined'), ] + [(lang.id, lang.language) for lang in Language.get_indigenous_language()]
+        return True
 
 
 class SelectLangForm(FlaskForm):
-    lang = SelectField(validators=[InputRequired()], choices=get_lang(), coerce=int, label='Language :')
+    lang = SelectField(validators=[InputRequired()], choices=Language.get_indigenous_language_select_field(), coerce=int, label='Language :')
 
     def __init__(self):
         super().__init__()

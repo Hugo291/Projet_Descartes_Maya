@@ -9,8 +9,8 @@ from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG, UPLOAD_DIR_TXT
 from app.models.ScannerThread import ScannerThread
 from app.routes.users import admin_required
 
-from app.models.DataBase import OCRPage, PdfFile, Language, db, OcrBoxWord, LogPdf
-from app.models.Form import EditNameFileForm, ScanDocumentForm, SelectLangForm
+from app.models.DataBase import OCRPage, PdfFile, Language, db, OcrBoxWord, LogPdf, Word
+from app.models.Form import EditNameFileForm, ScanDocumentForm, SelectLangForm, CreateWordForm
 from shutil import rmtree
 
 from sqlalchemy import desc
@@ -100,20 +100,19 @@ def upload():
 @login_required
 @admin_required
 def selection_extract(pdf_id):
-
     # select all pages of pdf
     pdf_file = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
 
-    #list langs
+    # list langs
     langs = Language.get_indigenous_language()
 
-    #form
+    # form
     form = SelectLangForm()
 
-    #context
+    # context
     context = {'pdf': pdf_file, 'langs': langs, 'title': 'Selection', 'form': form}
 
-    #POST
+    # POST
     if request.method == 'POST':
 
         if form.validate_on_submit():
@@ -126,7 +125,7 @@ def selection_extract(pdf_id):
             form.lang.data = pdf_file.get_lang_id()
             return render_template('selectionExtract.html', **context)
 
-    #GET
+    # GET
     form.lang.data = pdf_file.get_lang_id()
     return render_template('selectionExtract.html', **context)
 
@@ -318,22 +317,34 @@ def files_progress():
     return jsonify(files=[file.serialize() for file in files])
 
 
-@scan_app.route('/selection_langue/<int:pdf_id>')
+@scan_app.route('/selection_language/<int:pdf_id>')
 @login_required
 @admin_required
 def selection_language(pdf_id):
+    pdf = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
     langs = Language.query.all()
-    pages = OCRPage.query.filter_by(pdf_file_id=pdf_id).all()
-    return render_template('selectionLangue.html', pages=pages, pdf_id=pdf_id, lang_select_list=langs,
-                           title='Selection Langue')
+    form = CreateWordForm()
+
+    form.lang_1.data = 1
+    form.lang_2.data = pdf.get_lang_id()
+
+    return render_template('selectionLangue.html', pdf=pdf, lang_select_list=langs, form=form, title='Selection Langue')
 
 
-@scan_app.route('/word', methods=['POST'])
+@scan_app.route('/add_word', methods=['POST'])
 @login_required
 @admin_required
-def word(pdf_id):
-    pdf = PdfFile.query.filter(PdfFile.id == pdf_id).first_or_404()
-    dict = request.form
-    for key in dict:
-        print('form ' + key + ' : ' + dict[key])
-    return " -*- "
+def word():
+
+    form = CreateWordForm()
+    if form.validate_on_submit():
+        new_word = Word(writer=current_user.get_id(),
+                        word_es=" ".join(form.text_word_1.data.split()),
+                        word_ot=" ".join(form.text_word_2.data.split()),
+                        lang=form.lang_2.data
+                        )
+        db.session.add(new_word)
+        db.session.commit()
+        return jsonify(success='The word was adding in dictionary')
+    else:
+        return jsonify(error='Error during adding a word in dictionary')

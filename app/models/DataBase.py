@@ -33,6 +33,9 @@ class Language(db.Model):
     def get_indigenous_language_select_field():
         return [(0, 'Not defined'), ] + [(lang.id, lang.language) for lang in Language.get_indigenous_language()]
 
+    @staticmethod
+    def get_all_language():
+        return [(0, 'Not defined'), ] + [(lang.id, lang.language) for lang in Language.query.all()]
 
 class PdfFile(db.Model):
     __tablename__ = 'pdf_file'
