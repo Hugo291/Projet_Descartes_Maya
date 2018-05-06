@@ -1,7 +1,5 @@
 import datetime
 
-from flask import url_for
-
 from app import db
 from app.models.userModels import User
 
@@ -36,6 +34,7 @@ class Language(db.Model):
     @staticmethod
     def get_all_language():
         return [(0, 'Not defined'), ] + [(lang.id, lang.language) for lang in Language.query.all()]
+
 
 class PdfFile(db.Model):
     __tablename__ = 'pdf_file'

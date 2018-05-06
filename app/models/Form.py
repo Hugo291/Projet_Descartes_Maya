@@ -2,6 +2,7 @@ import os
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
+from sqlalchemy import or_
 from wtforms import IntegerField, validators, StringField, SelectField
 from wtforms.validators import InputRequired, Length
 from app.models.DataBase import Language
@@ -88,11 +89,11 @@ class EditNameFileForm(FlaskForm):
     filename = StringField(validators=[InputRequired(), Length(min=2, max=200)], label="Filename")
 
 
-
-
 class CreateWordForm(FlaskForm):
-    lang_1 = SelectField(validators=[InputRequired()], choices=Language.get_all_language(), coerce=int, label='Select Language :')
-    lang_2 = SelectField(validators=[InputRequired()], choices=Language.get_all_language(), coerce=int, label='Select Language :')
+    lang_1 = SelectField(validators=[InputRequired()], choices=Language.get_all_language(), coerce=int,
+                         label='Select Language :')
+    lang_2 = SelectField(validators=[InputRequired()], choices=Language.get_all_language(), coerce=int,
+                         label='Select Language :')
     text_word_1 = StringField(validators=[InputRequired()])
     text_word_2 = StringField(validators=[InputRequired()])
 
@@ -104,14 +105,26 @@ class CreateWordForm(FlaskForm):
         if not super().validate_on_submit():
             return False
 
-        # todo verifier lang int
+        # ckeck if lang in bdd
 
-        # todo text
+        if Language.query.filter(Language.id == self.lang_1.data).first() is None:
+            self.errors['Lang'] = "It's required to choice a language"
+            print("It's required to choice a language (lang1)")
+            return False
+
+        if Language.query.filter(Language.id == self.lang_2.data).first() is None:
+            self.errors['Lang'] = "It's required to choice a language"
+            print("It's required to choice a language (lang2)")
+            return False
+
+        # todo ckeck if is the same that in pdf table
+
         return True
 
 
 class SelectLangForm(FlaskForm):
-    lang = SelectField(validators=[InputRequired()], choices=Language.get_indigenous_language_select_field(), coerce=int, label='Language :')
+    lang = SelectField(validators=[InputRequired()], choices=Language.get_indigenous_language_select_field(),
+                       coerce=int, label='Language :')
 
     def __init__(self):
         super().__init__()

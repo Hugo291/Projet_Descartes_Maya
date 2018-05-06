@@ -171,12 +171,20 @@ $(function () {
                     alert(data.success);
                     $('#textarea_lang_2').empty();
                     $('#textarea_lang_1').empty();
+                     $('.state').html(
+				        '<div class="alert alert-success alert-dismissible" role="alert"> <strong>Success : </strong> '+data.success+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+					 );
 
                 }else{
-
+                    $('.state').html(
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> '+data.error+'  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+					 );
                 }
             },error : function (data) {
-                alert('error');
+                $('.state').html(
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> <strong>Error : </strong> One error raise during update <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div>'
+					 );
+
             }
         });
     });

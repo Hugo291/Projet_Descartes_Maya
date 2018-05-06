@@ -250,11 +250,11 @@ def delete_file(pdf_id):
         except Exception:
             pass
         db.session.commit()
-        return redirect(url_for('scan_app.files'))
+        return render_template('delete.html', success='success')
 
     except Exception as error:
         print("File : Scan.py function : delete_file -> " + str(error))
-        return jsonify({'error': 'During delete ( ' + str(error) + ' )'})
+        return render_template('delete.html', error=error)
 
 
 @scan_app.route('/correct/<int:pdf_id>/<int:num_page>', methods=['POST', 'GET'])
@@ -267,10 +267,13 @@ def correction(pdf_id, num_page):
     :param num_page: the page of pdf
     :return: success or error
     """
-    ocr_page = OCRPage.query.filter_by(pdf_file_id=pdf_id, num_page=num_page).first_or_404()
-    ocr_page.text_corrector = request.form['text']
-    db.session.commit()
-    return 'success'
+    try:
+        ocr_page = OCRPage.query.filter_by(pdf_file_id=pdf_id, num_page=num_page).first_or_404()
+        ocr_page.text_corrector = request.form['text']
+        db.session.commit()
+        return jsonify(success='success')
+    except Exception:
+        return jsonify(error='error')
 
 
 @scan_app.route('/details/<int:pdf_id>')
@@ -335,7 +338,6 @@ def selection_language(pdf_id):
 @login_required
 @admin_required
 def word():
-
     form = CreateWordForm()
     if form.validate_on_submit():
         new_word = Word(writer=current_user.get_id(),

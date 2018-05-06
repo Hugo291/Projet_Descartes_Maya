@@ -3,9 +3,9 @@ import time
 from threading import Thread
 
 from app.config import UPLOAD_DIR_PDF, UPLOAD_DIR_JPG
+from app.models.DataBase import PdfFile, OcrBoxWord, OCRPage, db, LogPdf, PDF_IN_PROGRESS, PDF_ERROR, PDF_SUCCESS
 from app.models.OCR import OCR
-from app.models.Pdf import convert_to_jpg, page_number
-from app.models.DataBase import LogPdf, PDF_IN_PROGRESS, PDF_WAIT, PDF_ERROR, PDF_SUCCESS
+from app.models.Pdf import convert_to_jpg
 
 cal = lambda current, total: int((current + 1) * 100 / total)
 
@@ -30,11 +30,15 @@ class ScannerThread(Thread):
         super().run()
         while True:
             time.sleep(10)
-            while self.has_waiting_file():
-                self.set_percent(0)
-                self.convert_scan_file()
-                self.delete_last_file_scaned()
-                self.set_percent(0)
+            try:
+                while self.has_waiting_file():
+                    self.set_percent(0)
+                    self.convert_scan_file()
+                    self.delete_last_file_scaned()
+                    self.set_percent(0)
+            except Exception as e:
+                print('One error not now is raise' + str(e))
+                db.session.rollback()
 
     def has_waiting_file(self):
         """
@@ -71,7 +75,6 @@ class ScannerThread(Thread):
         """
         Convert the file and scan this
         """
-        from app.models.DataBase import PdfFile, OcrBoxWord, OCRPage, db, LogPdf
 
         # pdf file bd
         pdf_file_db = PdfFile.query.filter_by(id=self.get_last_file_scaned()).first()
@@ -122,7 +125,7 @@ class ScannerThread(Thread):
                 for box in box_word:
                     box_word = OcrBoxWord(pdf_page_id=id_pdf_page, box=box)
                     db.session.add(box_word)
-                    db.session.commit()
+
                 # commit all word box in folder
                 db.session.commit()
 
@@ -147,22 +150,36 @@ class ScannerThread(Thread):
                 pdf_file_db.state = PDF_ERROR
                 db.session.commit()
                 self.log('An exception raised during the process -> ' + str(error), type=-1)
-            except:
-                pass
+            except Exception as e:
+                print('Errior Connection' + str(e))
+
     def __str__(self):
+        """
+        return string of class
+        :rtype: string
+        """
         return str(self.get_percent)
 
     def get_percent(self):
+        """
+        Getter perent
+        :return: int
+        """
         return self.__percent
 
     def set_percent(self, percent):
         """
+        Setter percent
         :param percent:
         """
         print("File : " + str(self.__percent) + " %")
         self.__percent = percent
 
     def log(self, message, type=0):
+        """
+        log action in bd
+        :rtype: void
+        """
         LogPdf(pdf_file_id=self.get_last_file_scaned(), message=message, type=type)
 
     def get_file_progress(self, pdf_id):

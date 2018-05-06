@@ -22,14 +22,30 @@ $(function () {
                 'text':$('#textarea-text-page').val()
             },
             success: function(data){
-
-                $('.state').html(
+                if(data.success){
+                     $('.state').html(
 				        '<div class="alert alert-success alert-dismissible" role="alert"> ' +
-                            '<strong>Success : </strong> Page n° "+page_number+" is update <button type="button" class="close" data-dismiss="alert" aria-label="Close"> ' +
+                            '<strong>Success : </strong> Page n° '+page_number+' changed !! <button type="button" class="close" data-dismiss="alert" aria-label="Close"> ' +
                             '<span aria-hidden="true">&times;</span> </button> ' +
                         '</div>'
                 );
+                }else{
+                    $('.state').html(
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> ' +
+                            '<strong>Error : </strong> The page could not be modified <button type="button" class="close" data-dismiss="alert" aria-label="Close"> ' +
+                            '<span aria-hidden="true">&times;</span> </button> ' +
+                        '</div>'
+                );
+                }
 
+
+            } , error:function (data) {
+                $('.state').html(
+				        '<div class="alert alert-danger alert-dismissible" role="alert"> ' +
+                            '<strong>Error : </strong> The page could not be modified <button type="button" class="close" data-dismiss="alert" aria-label="Close"> ' +
+                            '<span aria-hidden="true">&times;</span> </button> ' +
+                        '</div>'
+                );
             }});
     });
 
