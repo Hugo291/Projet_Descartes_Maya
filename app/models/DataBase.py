@@ -29,6 +29,10 @@ class Language(db.Model):
     def get_indigenous_language():
         return Language.query.filter((Language.id != 1)).all()
 
+    @staticmethod
+    def get_indigenous_language_select_field():
+        return [(0, 'Not defined'), ] + [(lang.id, lang.language) for lang in Language.get_indigenous_language()]
+
 
 class PdfFile(db.Model):
     __tablename__ = 'pdf_file'
@@ -76,6 +80,12 @@ class PdfFile(db.Model):
             'state': self.state,
             'html_status': value_status_file(self.state)
         }
+
+    def get_lang_id(self):
+        if self.lang is None:
+            return 0
+        else:
+            return self.lang.id
 
 
 class LogPdf(db.Model):
@@ -164,9 +174,11 @@ class Word(db.Model):
     word_ot = db.Column(db.String(200), nullable=False)
     lang = db.Column(db.Integer, db.ForeignKey(Language.id, ondelete='CASCADE'), nullable=True)
 
-    def __init__(self, writer, word):
-        self.word = word
+    def __init__(self, writer, word_es, word_ot, lang):
         self.writer = writer
+        self.word_es = word_es
+        self.word_ot = word_ot
+        self.lang = lang
 
 
 class SelectWordPos(db.Model):

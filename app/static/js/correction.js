@@ -22,8 +22,14 @@ $(function () {
                 'text':$('#textarea-text-page').val()
             },
             success: function(results){
-                //alert result
-                alert(results);
+
+                $('.state').html(
+				        '<div class="alert alert-success alert-dismissible" role="alert"> ' +
+                            '<strong>Success : </strong> Page n° "+page_number+" is update <button type="button" class="close" data-dismiss="alert" aria-label="Close"> ' +
+                            '<span aria-hidden="true">&times;</span> </button> ' +
+                        '</div>'
+                );
+
             }});
     });
 

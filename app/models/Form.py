@@ -2,9 +2,9 @@ import os
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import IntegerField, validators, StringField
+from wtforms import IntegerField, validators, StringField, SelectField
 from wtforms.validators import InputRequired, Length
-
+from app.models.DataBase import Language
 from app.config import TMP_DIR, UPLOAD_DIR_PDF
 
 
@@ -107,3 +107,32 @@ class CreateWordForm(FlaskForm):
         # todo verifier lang int
 
         # todo text
+
+
+def get_lang():
+    return [(0, 'Not defined'), ] + [(lang.id, lang.language) for lang in Language.get_indigenous_language()]
+
+
+class SelectLangForm(FlaskForm):
+    lang = SelectField(validators=[InputRequired()], choices=get_lang(), coerce=int, label='Language :')
+
+    def __init__(self):
+        super().__init__()
+
+    def validate_on_submit(self):
+        """
+
+        :return: bool
+        """
+        if not super().validate_on_submit():
+            return False
+
+        # select lang select by user
+        lang_selected = Language.query.filter(Language.id == self.lang.data).first()
+
+        # if lang not in bdd
+        if lang_selected is None:
+            self.errors['lang_id'] = ['The language not exist.']
+            return False
+
+        return True

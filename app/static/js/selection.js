@@ -99,6 +99,7 @@ function canvasBox(currentSelect) {
 
     return ctx;
 }
+
 //main method
 function searchBox(currentSelect) {
 

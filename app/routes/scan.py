@@ -10,7 +10,7 @@ from app.models.ScannerThread import ScannerThread
 from app.routes.users import admin_required
 
 from app.models.DataBase import OCRPage, PdfFile, Language, db, OcrBoxWord, LogPdf
-from app.models.Form import EditNameFileForm, ScanDocumentForm
+from app.models.Form import EditNameFileForm, ScanDocumentForm, SelectLangForm
 from shutil import rmtree
 
 from sqlalchemy import desc
@@ -25,22 +25,23 @@ def add_file(file):
     threadScan.append_file(file)
 
 
-def reset_all_file_unfinish():
+def reset_all_file_not_finish():
     """
     Reset all record that not finish (put them in error)
     """
 
     # select all file not finish or in progress
-    files = PdfFile.query.filter((PdfFile.state == 0) | (PdfFile.state == 1)).all()
+    # files = PdfFile.query.filter((PdfFile.state == 0) | (PdfFile.state == 1)).all()
 
     # error = -1
     # for file in files:
     # LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
     # file.state = -1
     # db.session.commit()
+    pass
 
 
-reset_all_file_unfinish()
+reset_all_file_not_finish()
 
 
 @scan_app.route('/', methods=['GET'])
@@ -95,14 +96,39 @@ def upload():
         return jsonify(error=[value[0] for key, value in form.errors.items()])
 
 
-@scan_app.route('/selectionExtract/<int:pdf_id>', methods=['GET', 'POST'])
+@scan_app.route('/selection_extract/<int:pdf_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def selection_extract(pdf_id):
+
     # select all pages of pdf
-    pdf = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
+    pdf_file = PdfFile.query.filter(pdf_id == PdfFile.id).first_or_404()
+
+    #list langs
     langs = Language.get_indigenous_language()
-    return render_template('selectionExtract.html', pdf=pdf, pdf_id=pdf_id, langs=langs, title='Selection')
+
+    #form
+    form = SelectLangForm()
+
+    #context
+    context = {'pdf': pdf_file, 'langs': langs, 'title': 'Selection', 'form': form}
+
+    #POST
+    if request.method == 'POST':
+
+        if form.validate_on_submit():
+            pdf_file.pdf_lang = form.lang.data
+            db.session.commit()
+            context.update({'success': 'The lang is updated'})
+            return render_template('selectionExtract.html', **context)
+        else:
+            context.update({'error': 'An error has occurred'})
+            form.lang.data = pdf_file.get_lang_id()
+            return render_template('selectionExtract.html', **context)
+
+    #GET
+    form.lang.data = pdf_file.get_lang_id()
+    return render_template('selectionExtract.html', **context)
 
 
 @scan_app.route('/download/<int:pdf_id>')
@@ -216,13 +242,13 @@ def delete_file(pdf_id):
         try:
             # remove pdf
             os.remove(os.path.join(UPLOAD_DIR_PDF, str(pdf_id) + '.pdf'))
-        except:
+        except Exception:
             pass
 
         try:
             # remove folder
             rmtree(os.path.join(UPLOAD_DIR_JPG, str(pdf_id)))
-        except:
+        except Exception:
             pass
         db.session.commit()
         return redirect(url_for('scan_app.files'))
@@ -272,9 +298,7 @@ def pdf(pdf_id):
 def edit(pdf_id):
     pdf = PdfFile.query.filter_by(id=int(pdf_id)).first_or_404()
     form = EditNameFileForm()
-
     if request.method == 'POST':
-        print('Bonjour')
         if form.validate_on_submit():
             pdf.name = form.filename.data
             db.session.commit()

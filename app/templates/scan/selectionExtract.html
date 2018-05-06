@@ -14,6 +14,22 @@
 {#    first block with name , lang  ,title#}
     <div class="row">
 
+    {% if success %}
+            <div class="alert alert-success">
+              <strong>Success : </strong> {{ success }}
+            </div>
+
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-danger">
+              <strong>Error : </strong> {{  error }}
+            </div>
+        {% endif %}
+
+    </div>
+    <div class="row">
+
         <div class="col">
         <div class="row">
             <h3 class="ml-2">Extract</h3>
@@ -34,12 +50,8 @@
 
                         <form method="POST">
                         <div class="input-group">
-                            <label for="lang-select" class="col-form-label mr-3">Language :</label><select class="form-control d-inline-block" id="lang-select">
-                                <option value="0">Not defined</option>
-                                {% for lang in langs %}
-                                    <option value="{{ lang.id }}">{{ lang.language|title }}</option>
-                                {% endfor %}
-                            </select>
+                            {{ form.lang.label(class_='col-form-label mr-2') }}
+                            {{ form.lang(class_='form-control d-inline-block') }}
                             <input class="btn btn-primary d-inline-block ml-2" type="submit" value="Select">
                         </div>
                         </form>
@@ -50,6 +62,10 @@
             </div>
         </div>
         </div>
+    </div>
+
+    <div class="state">
+
     </div>
 
     <div class="row mb-3">
@@ -65,14 +81,14 @@
                         {% set first_page_num = page.num_page %}
                     {% endif %}
 
-                    <li class="page-element-selection list-group-item" data-pdf_id="{{ pdf_id }}" data-page_number="{{ page.num_page }}">
+                    <li class="page-element-selection list-group-item" data-pdf_id="{{ pdf.id }}" data-page_number="{{ page.num_page }}">
                         <div class="card">
                             <div class="card-header">
                                 {% set num = page.num_page|int + 1 %}
                                 {{ num }}
                             </div>
                             <div class="card-body">
-                                <img width="100%" src="{{ url_for('scan_app.get_images' , pdf_id=pdf_id , page_number=page.num_page) }}">
+                                <img width="100%" src="{{ url_for('scan_app.get_images' , pdf_id=pdf.id , page_number=page.num_page) }}">
                             </div>
                         </div>
                     </li>
