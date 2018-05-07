@@ -1,0 +1,47 @@
+{% extends 'menu.html' %}
+{% block headpage %}
+
+    <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+
+{% endblock %}
+{% block content %}
+<div class="container">
+
+        <div class="row">
+
+            <div class="col-md-12 mt-4">
+
+                <table class = "table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Open</th>
+                        </tr>
+                    </thead>
+
+
+
+                    {% for lang in languages %}
+
+                        <tr class="table-line">
+
+                            <td>{{ lang.id }}</td>
+                            <td>{{ lang.language }}</td>
+                            <td><a href="{{ url_for('translation_app.dictionary' , lang_id=lang.id) }}"><i class="fa fa-folder-open-o"></i></a></td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                  </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

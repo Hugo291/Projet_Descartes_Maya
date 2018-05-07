@@ -153,6 +153,7 @@ class OcrBoxWord(db.Model):
             self.position_top = box['top'],
             self.position_left = box['left'],
             self.text = box['text']
+            print(box)
 
     def serialize(self):
         return {

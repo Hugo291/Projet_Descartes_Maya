@@ -82,7 +82,8 @@ class ScanDocumentForm(FlaskForm):
         try:
             os.remove(os.path.join(TMP_DIR, self.tmp_file_name))
         except Exception as error:
-            print("File Form.py function : close -> " + str(error))
+            # print("File Form.py function : close -> " + str(error))
+            pass
 
 
 class EditNameFileForm(FlaskForm):

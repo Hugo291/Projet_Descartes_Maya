@@ -2,7 +2,10 @@ from flask import Flask
 from flask import Blueprint, render_template
 from flask_login import login_required
 
+from app.models.DataBase import Language, Word
+
 translation_app = Blueprint('translation_app', __name__, template_folder='../templates/translation')
+
 
 @translation_app.route("/search_a_translation")
 @login_required
@@ -22,13 +25,16 @@ def untranslated_words():
     return render_template('translation/untranslated_words.html', title='List of untranslated words')
 
 
-@translation_app.route("/import_words_PDF")
+@translation_app.route('/languages')
 @login_required
-def import_words_PDF():
-    return render_template('import_words_PDF.html')
+def languages():
+    langs = Language.get_indigenous_language()
+    return render_template('languages.html', languages=langs)
 
 
-@translation_app.route("/add_words_from_PDF")
+@translation_app.route('/dictionary/<int:lang_id>')
 @login_required
-def add_words_from_PDF():
-    return render_template('add_words_from_PDF.html')
+def dictionary(lang_id):
+    lang = Language.query.filter(Language.id == lang_id).first_or_404()
+    words = Word.query.filter(Word.lang == lang_id).all()
+    return render_template('dictionary.html', lang=lang, words=words)
