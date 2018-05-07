@@ -50,11 +50,11 @@ reset_all_file_not_finish()
 @admin_required
 def show():
     """
-    Page for uplaod file
+    Page for upload file
     :return: upload.html
     """
     form = ScanDocumentForm()
-    return render_template('upload.html', form=form, title='Uplaod')
+    return render_template('upload.html', form=form, title='Upload')
 
 
 @scan_app.route('/upload', methods=['POST'])
