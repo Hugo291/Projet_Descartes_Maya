@@ -49,8 +49,8 @@ class PdfFile(db.Model):
     date_upload = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     owner = db.relationship('User')
-    pages = db.relationship('OCRPage')
-    logs = db.relationship('LogPdf')
+    pages = db.relationship('OCRPage', cascade="all, delete-orphan")
+    logs = db.relationship('LogPdf', cascade="all, delete-orphan")
     lang = db.relationship('Language')
 
     def __init__(self, id=None, name=None, num_page=None, pdf_owner=None):

@@ -110,7 +110,7 @@ def selection_extract(pdf_id):
     form = SelectLangForm()
 
     # context
-    context = {'pdf': pdf_file, 'langs': langs, 'title': 'Selection', 'form': form}
+    context = {'pdf': pdf_file, 'langs': langs, 'title': 'Selection', 'form': form }
 
     # POST
     if request.method == 'POST':
@@ -234,9 +234,11 @@ def delete_file(pdf_id):
     :param pdf_id:
     :return: files.html
     """
+    pdf = PdfFile.query.filter(PdfFile.id == pdf_id).first_or_404()
+
     try:
 
-        PdfFile.query.filter_by(id=pdf_id).delete()
+        db.session.delete(pdf)
 
         try:
             # remove pdf
@@ -249,6 +251,7 @@ def delete_file(pdf_id):
             rmtree(os.path.join(UPLOAD_DIR_JPG, str(pdf_id)))
         except Exception:
             pass
+
         db.session.commit()
         return render_template('delete.html', success='success')
 
