@@ -31,13 +31,19 @@ def reset_all_file_not_finish():
     """
 
     # select all file not finish or in progress
-    # files = PdfFile.query.filter((PdfFile.state == 0) | (PdfFile.state == 1)).all()
+    # files = PdfFile.query.filter(PdfFile.state == 1).all()
 
     # error = -1
     # for file in files:
     # LogPdf(pdf_file_id=file.id, message='Au demarage l\'analyse du fichier le fichier a été mit en erreur', type=-1)
     # file.state = -1
     # db.session.commit()
+
+    # files = PdfFile.query.filter(PdfFile.state == 1).all()
+    # for file in files :
+    #     threadScan.append_file(file.id)
+    #
+
     pass
 
 
