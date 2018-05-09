@@ -26,20 +26,29 @@ import app.models.DataBase
 # print('Start drop')
 # db.drop_all()
 # print('Start Create')
-db.create_all()
+#db.create_all()
 
 @application.route('/')
 def home_page():
+    '''
+    Show an homepage for the anonymous user
+    '''
     return render_template('home.html')
 
 
 @login.user_loader
 def load_user(user_id):
+    '''
+    Load user account details
+    '''
     return User.query.get(int(user_id))
 
 
 @application.errorhandler(404)
 def page_not_found(e):
+    '''
+    Show an 404 error page in case of an unknown page is requested
+    '''
     return render_template('404.html'), 404
 
 
