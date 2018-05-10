@@ -81,7 +81,7 @@
                         {% set first_page_num = page.num_page %}
                     {% endif %}
 
-                    <li class="page-element-selection list-group-item" data-pdf_id="{{ pdf.id }}" data-page_number="{{ page.num_page }}">
+                    <li class="page-element-selection list-group-item" data-pdf_id="{{ pdf.id }}" data-page_number="{{ page.num_page }}" data-img="{{ url_for('scan_app.get_images' , pdf_id=pdf.id , page_number=page.num_page) }}" >
                         <div class="card">
                             <div class="card-header">
                                 {% set num = page.num_page|int + 1 %}
